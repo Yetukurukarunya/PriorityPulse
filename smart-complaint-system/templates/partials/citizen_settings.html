@@ -1,0 +1,121 @@
+<!-- Citizen Settings Section -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-cog"></i> Account Settings
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5><i class="fas fa-user"></i> Profile Information</h5>
+                <form id="profileForm">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" value="{{ session.user_fullname }}" id="fullName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" value="{{ session.user_email }}" id="email" disabled>
+                        <small class="text-muted">Email cannot be changed</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" placeholder="Add phone number" id="phone">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+            
+            <div class="col-md-6">
+                <h5><i class="fas fa-bell"></i> Notification Preferences</h5>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                    <label class="form-check-label" for="emailNotifications">
+                        Email Notifications
+                    </label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="smsNotifications">
+                    <label class="form-check-label" for="smsNotifications">
+                        SMS Notifications
+                    </label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="statusUpdates" checked>
+                    <label class="form-check-label" for="statusUpdates">
+                        Status Update Alerts
+                    </label>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h5><i class="fas fa-lock"></i> Security</h5>
+                <button class="btn btn-outline-warning mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
+                <button class="btn btn-outline-danger" onclick="alert('Two-factor authentication would be enabled')">
+                    <i class="fas fa-shield-alt"></i> Enable 2FA
+                </button>
+            </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="row">
+            <div class="col-md-12">
+                <h5><i class="fas fa-trash-alt text-danger"></i> Danger Zone</h5>
+                <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+                <button class="btn btn-danger" onclick="confirm('Are you sure you want to delete your account? This action cannot be undone.') && alert('Account deletion would be processed')">
+                    <i class="fas fa-trash"></i> Delete My Account
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-key"></i> Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // In production, this would send a request to update profile
+    alert('Profile updated successfully!');
+});
+
+document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // In production, this would send a request to change password
+    alert('Password changed successfully!');
+    bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+});
+</script>

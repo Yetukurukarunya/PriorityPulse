@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard - PriorityPulse{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4" style="color: var(--accent-gold);">Analytics Dashboard</h2>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3 id="totalComplaintsStat">0</h3>
+                <p>Total Complaints</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3 id="avgSeverityStat">0</h3>
+                <p>Avg Severity Score</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3 id="responseRateStat">0%</h3>
+                <p>Response Rate</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <h3 id="resolutionRateStat">0%</h3>
+                <p>Resolution Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section - Will show only when data exists -->
+    <div id="chartsContainer">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="categoryChartContainer" class="chart-container"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="locationChartContainer" class="chart-container"></div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div id="trendChartContainer" class="chart-container"></div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div id="peakHoursChartContainer" class="chart-container"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-tachometer-alt"></i> Performance Metrics
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label>Response Rate: <span id="responseRateValue">0</span>%</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" id="responseRateBar"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Resolution Rate: <span id="resolutionRateValue">0</span>%</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-info" id="resolutionRateBar"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Average Severity: <span id="avgSeverityValue">0</span>/10</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="severityBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let charts = {};
+
+// Function to load analytics data from API
+function loadAnalyticsData() {
+    fetch('/get_analytics_data')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                const stats = data.stats;
+                const totalComplaints = stats.total;
+                
+                // Update stats cards
+                document.getElementById('totalComplaintsStat').textContent = totalComplaints;
+                document.getElementById('avgSeverityStat').textContent = stats.avg_severity;
+                document.getElementById('responseRateStat').textContent = stats.response_rate + '%';
+                document.getElementById('resolutionRateStat').textContent = stats.resolution_rate + '%';
+                
+                // Update progress bars
+                document.getElementById('responseRateValue').textContent = stats.response_rate;
+                document.getElementById('resolutionRateValue').textContent = stats.resolution_rate;
+                document.getElementById('avgSeverityValue').textContent = stats.avg_severity;
+                document.getElementById('responseRateBar').style.width = stats.response_rate + '%';
+                document.getElementById('resolutionRateBar').style.width = stats.resolution_rate + '%';
+                document.getElementById('severityBar').style.width = (stats.avg_severity / 10 * 100) + '%';
+                
+                // Check if there's data to display
+                if (totalComplaints === 0) {
+                    showEmptyState();
+                } else {
+                    showCharts(stats);
+                }
+            }
+        })
+        .catch(function(error) {
+            console.error('Error loading analytics:', error);
+            showEmptyState();
+        });
+}
+
+// Show empty state with message
+function showEmptyState() {
+    const containers = [
+        'categoryChartContainer',
+        'locationChartContainer',
+        'trendChartContainer',
+        'peakHoursChartContainer'
+    ];
+    
+    containers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>No Data Available</h4>
+                    <p>Submit complaints to see visual analytics and insights</p>
+                    <a href="/" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Submit Complaint
+                    </a>
+                </div>
+            `;
+        }
+    });
+}
+
+// Show charts with actual data
+function showCharts(stats) {
+    // Category Chart
+    const categoryContainer = document.getElementById('categoryChartContainer');
+    if (Object.keys(stats.by_category).length > 0) {
+        categoryContainer.innerHTML = '<canvas id="categoryChart"></canvas>';
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats.by_category),
+                datasets: [{
+                    data: Object.values(stats.by_category),
+                    backgroundColor: ['#f72585', '#f8961e', '#4895ef', '#4cc9f0']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Complaints by Category' }
+                }
+            }
+        });
+    } else {
+        categoryContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-chart-pie"></i>
+                <h4>No Category Data</h4>
+                <p>Submit complaints to see category distribution</p>
+            </div>
+        `;
+    }
+    
+    // Location Chart
+    const locationContainer = document.getElementById('locationChartContainer');
+    if (Object.keys(stats.by_location).length > 0) {
+        locationContainer.innerHTML = '<canvas id="locationChart"></canvas>';
+        const locationCtx = document.getElementById('locationChart').getContext('2d');
+        new Chart(locationCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(stats.by_location),
+                datasets: [{
+                    label: 'Number of Complaints',
+                    data: Object.values(stats.by_location),
+                    backgroundColor: '#4361ee'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Complaints by Location' }
+                }
+            }
+        });
+    } else {
+        locationContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-map-marker-alt"></i>
+                <h4>No Location Data</h4>
+                <p>Submit complaints with locations to see distribution</p>
+            </div>
+        `;
+    }
+    
+    // Trend Chart
+    const trendContainer = document.getElementById('trendChartContainer');
+    if (stats.trend_data && stats.trend_data.length > 0 && stats.trend_data.some(item => item.count > 0)) {
+        trendContainer.innerHTML = '<canvas id="trendChart"></canvas>';
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: stats.trend_data.map(item => item.date),
+                datasets: [{
+                    label: 'Complaints Count',
+                    data: stats.trend_data.map(item => item.count),
+                    borderColor: '#4361ee',
+                    backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: '7-Day Trend' }
+                }
+            }
+        });
+    } else {
+        trendContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-chart-line"></i>
+                <h4>No Trend Data</h4>
+                <p>Submit complaints over multiple days to see trends</p>
+            </div>
+        `;
+    }
+    
+    // Peak Hours Chart
+    const peakContainer = document.getElementById('peakHoursChartContainer');
+    if (stats.peak_hours && stats.peak_hours.length > 0) {
+        peakContainer.innerHTML = '<canvas id="peakHoursChart"></canvas>';
+        const peakCtx = document.getElementById('peakHoursChart').getContext('2d');
+        new Chart(peakCtx, {
+            type: 'line',
+            data: {
+                labels: stats.peak_hours.map(item => item[0]),
+                datasets: [{
+                    label: 'Complaints',
+                    data: stats.peak_hours.map(item => item[1]),
+                    borderColor: '#f8961e',
+                    backgroundColor: 'rgba(248, 150, 30, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Peak Hours (24h format)' }
+                }
+            }
+        });
+    } else {
+        peakContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-clock"></i>
+                <h4>No Peak Hour Data</h4>
+                <p>Submit complaints to analyze peak complaint times</p>
+            </div>
+        `;
+    }
+}
+
+// Load analytics when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadAnalyticsData();
+    
+    // Refresh data every 30 seconds
+    setInterval(loadAnalyticsData, 30000);
+});
+</script>
+{% endblock %}

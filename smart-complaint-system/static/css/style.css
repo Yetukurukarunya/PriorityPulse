@@ -1,0 +1,909 @@
+/* ==========================================================================
+   PRIORITYPULSE - GOVERNMENT PORTAL CSS SYSTEM
+   A professional, accessible, and high-contrast design system.
+   ========================================================================== */
+
+:root {
+    /* Color Palette - Official Government Theme */
+    --primary-gov: #0B2540;       /* Deep Navy Blue */
+    --primary-gov-light: #1A3E62; /* Mid Navy Accent */
+    --secondary-gov: #005A9C;     /* Official Blue */
+    --accent-gold: #B45309;       /* Warm Amber/Gold */
+    --accent-gold-light: #D97706;  /* Bright Amber */
+    --accent-gold-dark: #78350F;   /* Deep Amber/Bronze */
+    
+    /* Text Colors */
+    --text-dark: #1E293B;         /* Slate-900 (Main text) */
+    --text-muted: #64748B;        /* Slate-500 (Secondary text) */
+    --text-light: #FFFFFF;        /* White */
+    
+    /* Backgrounds & Interfaces */
+    --bg-dark: #F3F4F6;           /* Slate-100 (Page background) */
+    --bg-card: #FFFFFF;           /* Pure White */
+    --bg-hover: #F8FAFC;          /* Slate-50 */
+    --border-color: #E5E7EB;      /* Slate-200 */
+    
+    /* Priority & Status Theme Colors */
+    --success: #10B981;           /* Emerald Green */
+    --warning: #F59E0B;           /* Amber Orange */
+    --danger: #EF4444;            /* Ruby Red */
+    --info: #3B82F6;              /* Royal Blue */
+    --emergency: #DC2626;         /* Emergency Crimson */
+    
+    /* Interface Properties */
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-radius: 8px;
+    --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================================================
+   MODERN CSS RESET & BASE STYLES
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Skip Link for Accessibility */
+.skip-to-main {
+    position: absolute;
+    top: -100px;
+    left: 10px;
+    background: var(--accent-gold);
+    color: var(--text-light);
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    z-index: 9999;
+    transition: top 0.2s ease;
+}
+
+.skip-to-main:focus {
+    top: 10px;
+    color: var(--text-light);
+}
+
+/* ==========================================================================
+   SCROLLBAR & FOCUS OUTLINES
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--secondary-gov);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   NAVIGATION BAR (OFFICIAL HEADER)
+   ========================================================================== */
+.navbar {
+    background: var(--primary-gov);
+    border-bottom: 4px solid var(--accent-gold);
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-light) !important;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand i {
+    color: var(--accent-gold-light);
+}
+
+.navbar-brand span {
+    color: var(--accent-gold-light);
+    font-weight: 900;
+}
+
+.navbar .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.navbar .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+
+.navbar .btn-primary {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: var(--text-light);
+}
+
+.navbar .btn-primary:hover {
+    background: var(--accent-gold-light);
+    border-color: var(--accent-gold-light);
+}
+
+.dropdown-menu {
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow-hover);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-hover);
+    color: var(--primary-gov);
+}
+
+.dropdown-item i {
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   LANDING PAGE / HERO SECTION
+   ========================================================================== */
+.hero {
+    background: linear-gradient(135deg, #0A1C2A 0%, #0F2D4A 100%);
+    color: var(--text-light);
+    padding: 80px 0;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 -10px 20px rgba(0,0,0,0.2);
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.hero p {
+    font-size: 1.15rem;
+    color: #E2E8F0;
+    margin-bottom: 2rem;
+    max-width: 650px;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   DASHBOARD NAVIGATION SIDEBAR
+   ========================================================================== */
+.dashboard-nav {
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    min-height: calc(100vh - 68px);
+    padding: 2rem 0;
+}
+
+.dashboard-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition);
+    border-left: 4px solid transparent;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.dashboard-nav-item i {
+    width: 20px;
+    font-size: 1.1rem;
+    margin-right: 12px;
+    transition: var(--transition);
+}
+
+.dashboard-nav-item:hover {
+    background-color: var(--bg-hover);
+    color: var(--primary-gov);
+    border-left-color: var(--border-color);
+}
+
+.dashboard-nav-item.active {
+    background-color: rgba(0, 90, 156, 0.06);
+    color: var(--secondary-gov);
+    border-left-color: var(--secondary-gov);
+    font-weight: 600;
+}
+
+.dashboard-nav-item.active i {
+    color: var(--secondary-gov);
+}
+
+/* ==========================================================================
+   CARDS & PANELS
+   ========================================================================== */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.2rem 1.5rem;
+    font-weight: 700;
+    color: var(--primary-gov);
+    font-size: 1.1rem;
+}
+
+.card-header i {
+    color: var(--secondary-gov);
+    margin-right: 8px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* ==========================================================================
+   STATISTICS METRIC CARDS
+   ========================================================================== */
+.stat-card-detailed {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.stat-card-detailed:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: #CBD5E1;
+}
+
+.stat-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon-wrapper i {
+    font-size: 1.4rem;
+}
+
+.stat-icon-wrapper.bg-gold { background: rgba(180, 83, 9, 0.1); color: var(--accent-gold); }
+.stat-icon-wrapper.bg-green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.stat-icon-wrapper.bg-blue { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+.stat-icon-wrapper.bg-red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+.stat-card-detailed h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.1rem;
+    color: var(--text-dark);
+}
+
+.stat-card-detailed p {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   FORM CONTROLS & INPUTS
+   ========================================================================== */
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--bg-card);
+    border: 1px solid #CBD5E1;
+    color: var(--text-dark);
+    padding: 0.65rem 1rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--secondary-gov);
+    box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.15);
+    background-color: var(--bg-card);
+    color: var(--text-dark);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #94A3B8;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--secondary-gov);
+    border-color: var(--secondary-gov);
+    color: var(--text-light);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #004B82;
+    border-color: #004B82;
+    color: var(--text-light);
+}
+
+.btn-outline-primary {
+    color: var(--secondary-gov);
+    border-color: var(--secondary-gov);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-gov);
+    color: var(--text-light);
+}
+
+.btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+    color: var(--text-light);
+}
+
+.btn-success:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    border-color: var(--danger);
+    color: var(--text-light);
+}
+
+.btn-danger:hover {
+    background-color: #DC2626;
+    border-color: #DC2626;
+}
+
+/* ==========================================================================
+   COMPLAINT CARDS & ITEMS
+   ========================================================================== */
+.complaint-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.complaint-item:hover {
+    transform: translateX(3px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: #CBD5E1;
+}
+
+.priority-emergency { border-left-color: var(--emergency); }
+.priority-high { border-left-color: var(--warning); }
+.priority-medium { border-left-color: var(--info); }
+.priority-low { border-left-color: var(--success); }
+
+.text-gold {
+    color: var(--accent-gold) !important;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   STATUS & SEVERITY BADGES
+   ========================================================================== */
+.badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* Severity Labels */
+.badge-emergency { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+.badge-high { background-color: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+.badge-medium { background-color: #EFF6FF; color: #1E40AF; border: 1px solid #93C5FD; }
+.badge-low { background-color: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7; }
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-pending { background-color: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; }
+.status-in-progress, .status-assigned { background-color: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+.status-resolved { background-color: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+.status-closed { background-color: #F3F4F6; color: #4B5563; border: 1px solid #D1D5DB; }
+
+/* Severity Indicators */
+.severity-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    font-weight: 700;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   DATA TABLES (CLEAN GOVERNMENT GRID)
+   ========================================================================== */
+.table {
+    margin-bottom: 0;
+    color: var(--text-dark);
+}
+
+.table th {
+    background-color: #F8FAFC !important;
+    color: var(--primary-gov) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+.table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: #334155;
+    background-color: var(--bg-card);
+}
+
+.table-hover tbody tr:hover td {
+    background-color: var(--bg-hover) !important;
+}
+
+/* ==========================================================================
+   ALERT BARS & TOASTS
+   ========================================================================== */
+.alert {
+    border: none;
+    border-left: 4px solid;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--box-shadow);
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background-color: #ECFDF5;
+    color: #065F46;
+    border-left-color: var(--success);
+}
+
+.alert-danger {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border-left-color: var(--danger);
+}
+
+.alert-warning {
+    background-color: #FFFBEB;
+    color: #92400E;
+    border-left-color: var(--warning);
+}
+
+.alert-info {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    border-left-color: var(--info);
+}
+
+.alert .btn-close {
+    font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   MAP VIEW CONTROLS & LEGEND
+   ========================================================================== */
+#map {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: var(--border-radius) !important;
+    padding: 5px !important;
+    box-shadow: var(--box-shadow-hover) !important;
+}
+
+.leaflet-popup-content h6 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.leaflet-popup-content p {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   UTILITY CLASSES & SPACING
+   ========================================================================== */
+.text-muted { color: var(--text-muted) !important; }
+.bg-light { background-color: var(--bg-hover) !important; }
+.fw-bold { font-weight: 700 !important; }
+
+/* Margins & Paddings */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+
+.p-4 { padding: 1.5rem !important; }
+.py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+/* Empty state design */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--text-muted);
+    opacity: 0.4;
+    margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+    color: var(--primary-gov);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+}
+
+/* Loader */
+.loader {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #CBD5E1;
+    border-top-color: var(--secondary-gov);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   OFFICIAL FOOTER (GOVERNMENT DISCLAIMER STYLE)
+   ========================================================================== */
+.footer {
+    background-color: var(--primary-gov);
+    color: #E2E8F0;
+    border-top: 5px solid var(--accent-gold);
+    padding: 3rem 0 1.5rem;
+    margin-top: 4rem;
+}
+
+.footer h5 {
+    color: var(--text-light);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.6rem;
+}
+
+.footer-links a {
+    color: #CBD5E1;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+    color: var(--text-light);
+    padding-left: 3px;
+}
+
+.social-links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    color: #CBD5E1;
+    font-size: 1.25rem;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
+
+.footer hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================
+   STAT CARDS - HERO OR FLAT LAYOUT
+   ========================================== */
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: var(--secondary-gov);
+}
+
+.stat-card i {
+    font-size: 2rem;
+    color: var(--secondary-gov);
+    margin-bottom: 0.75rem;
+}
+
+.stat-card h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.stat-card p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* ==========================================
+   PROJECT AND FACT CARDS
+   ========================================== */
+.numbers-section {
+    background: linear-gradient(135deg, var(--primary-gov) 0%, #162E4A 100%);
+    padding: 3rem 0;
+    border-radius: var(--border-radius);
+    color: var(--text-light);
+    box-shadow: var(--box-shadow);
+}
+
+.number-card {
+    text-align: center;
+}
+
+.number-card h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent-gold-light);
+    margin-bottom: 0.25rem;
+}
+
+.number-card p {
+    color: #E2E8F0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: var(--secondary-gov);
+}
+
+.project-icon {
+    background: rgba(0, 90, 156, 0.08);
+    color: var(--secondary-gov);
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.project-content {
+    padding: 1.25rem;
+}
+
+.project-content h4 {
+    font-weight: 700;
+    color: var(--primary-gov);
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.project-content p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUTS
+   ========================================================================== */
+@media (max-width: 991px) {
+    .dashboard-nav {
+        min-height: auto;
+        padding: 1rem 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem !important;
+    }
+    
+    .stat-card-detailed {
+        margin-bottom: 1rem;
+    }
+    
+    .table td, .table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLE
+   ========================================================================== */
+@media print {
+    .navbar,
+    .dashboard-nav,
+    .footer,
+    .btn,
+    .social-links {
+        display: none !important;
+    }
+    
+    body {
+        background: #FFFFFF;
+        color: #000000;
+    }
+    
+    .main-content {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+    
+    .card,
+    .stat-card-detailed {
+        border: 1px solid #CBD5E1 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+}

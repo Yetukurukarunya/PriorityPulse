@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Reports & Insights{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-line"></i> Executive Summary
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <h2>{{ stats.total }}</h2>
+                        <p class="text-muted">Total Complaints</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h2>{{ stats.avg_severity }}/10</h2>
+                        <p class="text-muted">Avg Severity</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h2>{{ stats.response_rate }}%</h2>
+                        <p class="text-muted">Response Rate</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h2>{{ stats.resolution_rate }}%</h2>
+                        <p class="text-muted">Resolution Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-brain"></i> AI Insights & Recommendations
+            </div>
+            <div class="card-body">
+                {% if insights.has_insights %}
+                    {% for insight in insights.insights %}
+                    <div class="insight-card insight-{{ insight.type }}">
+                        <i class="fas fa-{{ insight.icon }} fa-2x float-end"></i>
+                        <h6>{{ insight.title }}</h6>
+                        <p>{{ insight.message }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">{{ insights.message }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-download"></i> Export Reports
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary w-100 mb-2" onclick="exportPDF()">
+                    <i class="fas fa-file-pdf"></i> Export as PDF
+                </button>
+                <button class="btn btn-success w-100 mb-2" onclick="exportCSV()">
+                    <i class="fas fa-file-excel"></i> Export as CSV
+                </button>
+                <button class="btn btn-info w-100" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Detailed Analytics
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Percentage</th>
+                            <th>Avg Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category, count in stats.by_category.items() %}
+                        <tr>
+                            <td>{{ category }}</td>
+                            <td>{{ count }}</td>
+                            <td>{{ (count / stats.total * 100)|round(1) if stats.total > 0 else 0 }}%</td>
+                            <td>
+                                {% if category == 'Emergency' %}8.5
+                                {% elif category == 'High Priority' %}6.5
+                                {% elif category == 'Medium Priority' %}4.5
+                                {% else %}2.5
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function exportPDF() {
+    alert('PDF export would be implemented with a library like jsPDF');
+}
+
+function exportCSV() {
+    fetch('/get_priority_queue')
+        .then(response => response.json())
+        .then(data => {
+            let csv = 'ID,Complaint,Location,Severity,Category,Status,Timestamp\n';
+            data.complaints.forEach(c => {
+                csv += `"${c.id}","${c.text.replace(/"/g, '""')}","${c.location}",${c.severity_score},"${c.category}","${c.status}","${c.timestamp}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `complaints_report_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        });
+}
+</script>
+{% endblock %}

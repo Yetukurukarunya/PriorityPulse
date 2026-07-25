@@ -1,0 +1,1040 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - PriorityPulse{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 style="color: var(--primary-gov); font-weight: 800;">
+                <i class="fas fa-crown me-2 text-warning"></i>System Administrator Portal
+            </h2>
+            <p class="text-muted">Manage complaints, oversee government officers, administer users, and monitor system metrics.</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area containing all tabs -->
+    <div class="row">
+        <div class="col-12">
+            
+            <!-- Overview Tab -->
+            <div class="section-tab active" id="tab-overview">
+                <!-- Statistics Row -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card-detailed">
+                            <div class="stat-icon-wrapper bg-blue">
+                                <i class="fas fa-clipboard-list fa-2x"></i>
+                            </div>
+                            <div>
+                                <h3 id="statTotalComplaints">{{ stats.total_complaints if stats else 0 }}</h3>
+                                <p class="mb-0">Total Grievances</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-detailed">
+                            <div class="stat-icon-wrapper bg-green">
+                                <i class="fas fa-check-double fa-2x"></i>
+                            </div>
+                            <div>
+                                <h3 id="statResolvedComplaints">{{ stats.resolved_complaints if stats else 0 }}</h3>
+                                <p class="mb-0">Resolved Cases</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-detailed">
+                            <div class="stat-icon-wrapper bg-red">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h3 id="statAvgSeverity">{{ "%.1f"|format(stats.avg_severity) if stats and stats.avg_severity else 0 }}</h3>
+                                <p class="mb-0">Avg Severity Score</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-detailed">
+                            <div class="stat-icon-wrapper bg-gold">
+                                <i class="fas fa-users-cog fa-2x"></i>
+                            </div>
+                            <div>
+                                <h3 id="statTotalUsers">{{ stats.total_users if stats else 0 }}</h3>
+                                <p class="mb-0">Registered Citizens</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Recent Complaints -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-history"></i> Recent Submissions</span>
+                                <button class="btn btn-sm btn-outline-primary" onclick="showSection('all-complaints')">
+                                    <i class="fas fa-list me-1"></i>View All
+                                </button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Grievance</th>
+                                                <th class="text-center">Severity</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-end">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if complaints %}
+                                                {% for complaint in complaints[:5] %}
+                                                <tr class="align-middle">
+                                                    <td>
+                                                        <span class="badge bg-secondary">#{{ complaint.complaint_id[-4:] }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="fw-bold text-dark">{{ complaint.complaint_text|truncate(50) }}</div>
+                                                        <small class="text-muted"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ complaint.location|truncate(30) }}</small>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge {% if complaint.severity_score >= 8 %}badge-emergency{% elif complaint.severity_score >= 5 %}badge-high{% elif complaint.severity_score >= 3 %}badge-medium{% else %}badge-low{% endif %}">
+                                                            {{ complaint.severity_score }}/10
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="status-badge {% if complaint.status == 'resolved' %}status-resolved{% elif complaint.status == 'pending' %}status-pending{% elif complaint.status in ['assigned', 'in_progress'] %}status-in-progress{% else %}status-closed{% endif %}">
+                                                            {{ complaint.status|upper }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <small class="text-muted">{{ complaint.created_at.strftime('%Y-%m-%d') if complaint.created_at else 'N/A' }}</small>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-4">No recent grievances found.</td>
+                                                </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role Distribution -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie"></i> Portal Users Distribution
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>System Role</th>
+                                                <th class="text-end">Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if user_stats %}
+                                                {% for stat in user_stats %}
+                                                <tr>
+                                                    <td class="text-capitalize fw-bold text-dark">
+                                                        <i class="fas {% if stat.role == 'admin' %}fa-crown text-warning{% elif stat.role == 'officer' %}fa-user-shield text-primary{% else %}fa-user text-muted{% endif %} me-2"></i>
+                                                        {{ stat.role }}s
+                                                    </td>
+                                                    <td class="text-end fw-bold">{{ stat.count }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted">No statistics available.</td>
+                                                </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert alert-info mt-3 mb-0 py-2 px-3 small">
+                                    <i class="fas fa-shield-alt me-1 text-primary"></i> Promote or deactivate user profiles from the <strong>User Management</strong> tab.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Complaints Tab -->
+            <div class="section-tab" id="tab-all-complaints">
+                <div class="card">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-clipboard-list"></i> System-wide Grievance Directory</span>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search description/location..." id="adminSearchComplaints" style="width: 250px;">
+                            <select class="form-select form-select-sm" id="adminFilterStatus" style="width: 150px;">
+                                <option value="all">All Statuses</option>
+                                <option value="pending">Pending Review</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="loadAdminComplaints()"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="adminComplaintsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Grievance / Citizen Info</th>
+                                        <th>Location</th>
+                                        <th class="text-center">Severity</th>
+                                        <th class="text-center">Status</th>
+                                        <th style="width: 280px;">Assign to Government Officer</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminComplaintsList">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5"><div class="loader"></div> Loading complaints...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Tab -->
+            <div class="section-tab" id="tab-users">
+                <div class="card">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-users-cog"></i> Account Registry & Authorizations</span>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search registry..." id="searchUserRegistry" style="width: 250px;">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="loadUserRegistry()"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Email / Phone</th>
+                                        <th class="text-center">System Role</th>
+                                        <th class="text-center">Account Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userRegistryList">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5"><div class="loader"></div> Loading accounts...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Officers Tab -->
+            <div class="section-tab" id="tab-officers">
+                <div class="row">
+                    <!-- Quick Assignment Panel -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-paper-plane"></i> Quick Case Assignment
+                            </div>
+                            <div class="card-body">
+                                <form id="quickAssignForm">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="assignComplaintSelect">Pending Complaint</label>
+                                        <select class="form-select" id="assignComplaintSelect" required>
+                                            <option value="">Select pending case...</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="assignOfficerSelect">Government Officer</label>
+                                        <select class="form-select" id="assignOfficerSelect" required>
+                                            <option value="">Select officer...</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-check-circle me-1"></i>Confirm Assignment
+                                    </button>
+                                </form>
+                                <div id="assignmentAlert" class="mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Officer Workload Registry -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-user-shield"></i> Officer Performance & Workload Registry</span>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="loadOfficersRegistry()"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Officer Account</th>
+                                                <th>Active Cases</th>
+                                                <th>Resolved Cases</th>
+                                                <th class="text-center">Performance / Success</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="officersWorkloadList">
+                                            <tr>
+                                                <td colspan="5" class="text-center py-5"><div class="loader"></div> Loading officer statistics...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="section-tab" id="tab-analytics">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie"></i> Grievance Categories Distribution
+                            </div>
+                            <div class="card-body text-center" style="position: relative; height: 350px;">
+                                <canvas id="adminCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar"></i> Weekly Grievance Resolution Trend
+                            </div>
+                            <div class="card-body text-center" style="position: relative; height: 350px;">
+                                <canvas id="adminWeeklyTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-exclamation-triangle"></i> Severity Volume Analysis
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light mb-2">
+                                            <h2 class="text-danger fw-bold" id="analyticsEmergencyCount">0</h2>
+                                            <span class="badge badge-emergency">Emergency (8-10)</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light mb-2">
+                                            <h2 class="text-warning fw-bold" id="analyticsHighCount">0</h2>
+                                            <span class="badge badge-high">High (5-7)</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light mb-2">
+                                            <h2 class="text-primary fw-bold" id="analyticsMediumCount">0</h2>
+                                            <span class="badge badge-medium">Medium (3-4)</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light mb-2">
+                                            <h2 class="text-success fw-bold" id="analyticsLowCount">0</h2>
+                                            <span class="badge badge-low">Low (1-2)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map View Tab -->
+            <div class="section-tab" id="tab-map-view">
+                {% include 'partials/map_view_section.html' %}
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="section-tab" id="tab-reports">
+                <div class="card">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-file-alt"></i> Export System Audit Logs & Reports</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-success" onclick="exportData('csv')"><i class="fas fa-file-csv me-1"></i>Export CSV</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="window.print()"><i class="fas fa-print me-1"></i>Print Report</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3 text-dark">Portal Audit Summary</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="adminAuditTable">
+                                <thead>
+                                    <tr>
+                                        <th>Metrics Summary</th>
+                                        <th>Current Total Values</th>
+                                        <th>Status Performance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-dark">Total Grievances Submitted</td>
+                                        <td id="reportTotalComplaints">0</td>
+                                        <td class="text-success fw-bold"><i class="fas fa-arrow-up me-1"></i>Active Tracking</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">Resolved Grievances</td>
+                                        <td id="reportResolvedComplaints">0</td>
+                                        <td id="reportResolutionRate" class="fw-bold text-primary">0% Resolution</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">Pending Grievances</td>
+                                        <td id="reportPendingComplaints">0</td>
+                                        <td class="text-warning fw-bold"><i class="fas fa-clock me-1"></i>Awaiting Assignment</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-dark">Average Prediction Severity</td>
+                                        <td id="reportAvgSeverity">0.0</td>
+                                        <td class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i>AI Evaluated</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings Tab -->
+            <div class="section-tab" id="tab-system">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <i class="fas fa-radiation"></i> Administrative Danger Zone
+                    </div>
+                    <div class="card-body">
+                        <h5 class="fw-bold text-danger">Reset System & Clear Database</h5>
+                        <p class="text-muted">Clearing database data removes all submitted citizen complaints. This option is used for system testing and demonstration purposes. Proceed with caution.</p>
+                        <button class="btn btn-danger" onclick="resetSystemSession()">
+                            <i class="fas fa-trash-alt me-1"></i>Delete All Complaints & Reset Queue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Global Chart references for recycling
+let adminCategoryChartObj = null;
+let adminTrendChartObj = null;
+let officersListGlobal = [];
+
+// Dynamic Tab Switching
+document.querySelectorAll('.dashboard-nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        showSection(section);
+    });
+});
+
+function showSection(sectionName) {
+    document.querySelectorAll('.section-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.dashboard-nav-item').forEach(item => item.classList.remove('active'));
+    
+    const targetTab = document.getElementById(`tab-${sectionName}`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    
+    const activeNav = document.querySelector(`[data-section="${sectionName}"]`);
+    if (activeNav) {
+        activeNav.classList.add('active');
+    }
+    
+    // Perform section-specific initializations
+    if (sectionName === 'all-complaints') {
+        loadAdminComplaints();
+    } else if (sectionName === 'users') {
+        loadUserRegistry();
+    } else if (sectionName === 'officers') {
+        loadOfficersRegistry();
+    } else if (sectionName === 'analytics') {
+        loadAnalyticsData();
+    } else if (sectionName === 'map-view') {
+        setTimeout(() => {
+            if (typeof map !== 'undefined' && map) {
+                map.invalidateSize();
+                if (typeof loadMarkers === 'function') loadMarkers();
+            }
+        }, 300);
+    } else if (sectionName === 'reports') {
+        loadReportStats();
+    }
+}
+
+// All Complaints section - Fetch, Search, Filter & Render
+function loadAdminComplaints() {
+    const listContainer = document.getElementById('adminComplaintsList');
+    listContainer.innerHTML = '<tr><td colspan="6" class="text-center py-5"><div class="loader"></div> Loading directory...</td></tr>';
+    
+    fetch('/get-complaints')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.complaints) {
+                renderAdminComplaints(data.complaints);
+            } else {
+                listContainer.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch complaints: ${data.error}</td></tr>`;
+            }
+        })
+        .catch(err => {
+            listContainer.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Network error: ${err.message}</td></tr>`;
+        });
+}
+
+function renderAdminComplaints(complaints) {
+    const listContainer = document.getElementById('adminComplaintsList');
+    if (complaints.length === 0) {
+        listContainer.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No grievances found in system.</td></tr>';
+        return;
+    }
+    
+    let html = '';
+    complaints.forEach(c => {
+        // Dropdown status options
+        const badgeClass = c.status === 'resolved' ? 'status-resolved' :
+                           c.status === 'pending' ? 'status-pending' : 'status-in-progress';
+                           
+        const severityClass = c.severity_score >= 8 ? 'badge-emergency' :
+                             c.severity_score >= 5 ? 'badge-high' :
+                             c.severity_score >= 3 ? 'badge-medium' : 'badge-low';
+        
+        let officerSelectHtml = '';
+        if (c.status === 'pending') {
+            officerSelectHtml = `
+                <div class="input-group input-group-sm">
+                    <select class="form-select form-select-sm" id="assign-sel-${c.complaint_id}" aria-label="Assign officer for ${c.complaint_id}">
+                        <option value="">Assign Officer...</option>
+                        ${officersListGlobal.map(off => `<option value="${off.id}">${off.username}</option>`).join('')}
+                    </select>
+                    <button class="btn btn-sm btn-primary" onclick="assignCaseInline('${c.complaint_id}')">Assign</button>
+                </div>
+            `;
+        } else {
+            officerSelectHtml = `<span class="text-muted small"><i class="fas fa-user-check text-success me-1"></i>Assigned (${c.citizen_name || 'Officer Assigned'})</span>`;
+        }
+
+        html += `
+            <tr class="align-middle">
+                <td class="fw-bold">#${c.complaint_id[-6:] || c.complaint_id}</td>
+                <td>
+                    <div class="fw-bold text-dark text-truncate" style="max-width: 350px;" title="${c.complaint_text}">${c.complaint_text}</div>
+                    <small class="text-muted">
+                        <i class="fas fa-user-circle me-1"></i>Subby: ${c.citizen_name || 'Anonymous'} | 
+                        <i class="fas fa-tag ms-2 me-1"></i>${c.category || 'Other'}
+                    </small>
+                </td>
+                <td>
+                    <div class="text-truncate" style="max-width: 180px;" title="${c.location || 'N/A'}">
+                        <i class="fas fa-map-marker-alt text-danger me-1"></i>${c.location || 'N/A'}
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span class="badge ${severityClass}">${c.severity_score}/10</span>
+                </td>
+                <td class="text-center">
+                    <span class="status-badge ${badgeClass}">${c.status.toUpperCase()}</span>
+                </td>
+                <td>
+                    ${officerSelectHtml}
+                </td>
+            </tr>
+        `;
+    });
+    listContainer.innerHTML = html;
+}
+
+// Search and filtering local table list
+document.getElementById('adminSearchComplaints').addEventListener('input', filterAdminComplaintsList);
+document.getElementById('adminFilterStatus').addEventListener('change', filterAdminComplaintsList);
+
+function filterAdminComplaintsList() {
+    const searchVal = document.getElementById('adminSearchComplaints').value.toLowerCase();
+    const filterStatus = document.getElementById('adminFilterStatus').value;
+    
+    const rows = document.querySelectorAll('#adminComplaintsList tr');
+    rows.forEach(row => {
+        if (row.cells.length < 5) return;
+        const text = row.cells[1].textContent.toLowerCase();
+        const loc = row.cells[2].textContent.toLowerCase();
+        const status = row.cells[4].textContent.trim().toLowerCase();
+        
+        const matchesSearch = text.includes(searchVal) || loc.includes(searchVal);
+        const matchesStatus = filterStatus === 'all' || 
+                              (filterStatus === 'pending' && status === 'pending') ||
+                              (filterStatus === 'in_progress' && (status === 'in_progress' || status === 'assigned')) ||
+                              (filterStatus === 'resolved' && status === 'resolved');
+                              
+        if (matchesSearch && matchesStatus) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// User Registry: Fetch and toggle status/role
+function loadUserRegistry() {
+    const listContainer = document.getElementById('userRegistryList');
+    listContainer.innerHTML = '<tr><td colspan="6" class="text-center py-5"><div class="loader"></div> Loading user accounts...</td></tr>';
+    
+    fetch('/get-users')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.users) {
+                renderUserRegistry(data.users);
+            } else {
+                listContainer.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to load registry: ${data.error}</td></tr>`;
+            }
+        })
+        .catch(err => {
+            listContainer.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Network error: ${err.message}</td></tr>`;
+        });
+}
+
+function renderUserRegistry(users) {
+    const listContainer = document.getElementById('userRegistryList');
+    if (users.length === 0) {
+        listContainer.innerHTML = '<tr><td colspan="6" class="text-center py-4">No users registered in the system.</td></tr>';
+        return;
+    }
+    
+    let html = '';
+    users.forEach(u => {
+        const statusBtnClass = u.is_active ? 'btn-outline-danger' : 'btn-success';
+        const statusBtnText = u.is_active ? 'Deactivate' : 'Activate';
+        const badgeRoleClass = u.role === 'admin' ? 'badge-role-admin' :
+                               u.role === 'officer' ? 'badge-role-officer' : 'badge-role-citizen';
+                               
+        const statusText = u.is_active ? 
+                           '<span class="status-badge status-resolved"><i class="fas fa-check-circle me-1"></i>Active</span>' : 
+                           '<span class="status-badge status-closed"><i class="fas fa-ban me-1"></i>Deactivated</span>';
+                           
+        html += `
+            <tr class="align-middle">
+                <td class="fw-bold text-dark">${u.username}</td>
+                <td>${u.full_name}</td>
+                <td>
+                    <div class="small"><i class="fas fa-envelope text-muted me-1"></i>${u.email}</div>
+                    <div class="small"><i class="fas fa-phone text-muted me-1"></i>${u.phone || 'N/A'}</div>
+                </td>
+                <td class="text-center">
+                    <span class="badge-role ${badgeRoleClass}">${u.role.toUpperCase()}</span>
+                </td>
+                <td class="text-center">
+                    ${statusText}
+                </td>
+                <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                        <select class="form-select form-select-sm" onchange="updateUserRoleInline(${u.id}, this.value)" aria-label="Change user role for ${u.username}">
+                            <option value="citizen" ${u.role === 'citizen' ? 'selected' : ''}>Citizen</option>
+                            <option value="officer" ${u.role === 'officer' ? 'selected' : ''}>Officer</option>
+                            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+                        </select>
+                        <button class="btn btn-sm ${statusBtnClass}" onclick="toggleUserStatusInline(${u.id}, ${u.is_active ? 0 : 1})">
+                            ${statusBtnText}
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    listContainer.innerHTML = html;
+}
+
+// User Actions
+function toggleUserStatusInline(userId, newStatus) {
+    fetch('/toggle-user-status', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: userId, is_active: newStatus})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            loadUserRegistry();
+        } else {
+            alert('Failed to update account status: ' + data.error);
+        }
+    });
+}
+
+function updateUserRoleInline(userId, newRole) {
+    fetch('/update-user-role', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: userId, role: newRole})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            loadUserRegistry();
+            loadOfficersRegistry(); // Refresh workload registry
+        } else {
+            alert('Failed to update account role: ' + data.error);
+        }
+    });
+}
+
+// Officers registry & dynamic case assignment lists
+function loadOfficersRegistry() {
+    const workloadContainer = document.getElementById('officersWorkloadList');
+    workloadContainer.innerHTML = '<tr><td colspan="5" class="text-center py-5"><div class="loader"></div> Loading officer workload registry...</td></tr>';
+    
+    // Fetch officers
+    fetch('/get-officers')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.officers) {
+                officersListGlobal = data.officers;
+                renderOfficersWorkload(data.officers);
+                populateQuickAssignmentLists();
+            } else {
+                workloadContainer.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Failed to fetch workload stats: ${data.error}</td></tr>`;
+            }
+        })
+        .catch(err => {
+            workloadContainer.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Network error: ${err.message}</td></tr>`;
+        });
+}
+
+function renderOfficersWorkload(officers) {
+    const workloadContainer = document.getElementById('officersWorkloadList');
+    if (officers.length === 0) {
+        workloadContainer.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No government officers registered.</td></tr>';
+        return;
+    }
+    
+    let html = '';
+    officers.forEach(off => {
+        const totalCases = off.active_cases + off.resolved_cases;
+        const rate = totalCases > 0 ? ((off.resolved_cases / totalCases) * 100).toFixed(1) : '100.0';
+        let badgeColor = 'bg-success';
+        if (parseFloat(rate) < 50) badgeColor = 'bg-danger';
+        else if (parseFloat(rate) < 80) badgeColor = 'bg-warning text-dark';
+        
+        html += `
+            <tr class="align-middle">
+                <td>
+                    <div class="fw-bold text-dark">${off.username}</div>
+                    <small class="text-muted"><i class="fas fa-envelope me-1"></i>${off.email} | Joined: ${off.created_at || 'N/A'}</small>
+                </td>
+                <td class="fw-bold text-primary">${off.active_cases} active cases</td>
+                <td class="fw-bold text-success">${off.resolved_cases} resolved cases</td>
+                <td class="text-center">
+                    <span class="badge ${badgeColor}" style="font-size: 0.85rem;">${rate}% Success</span>
+                </td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Viewing history for ${off.username}')">View History</button>
+                </td>
+            </tr>
+        `;
+    });
+    workloadContainer.innerHTML = html;
+}
+
+function populateQuickAssignmentLists() {
+    const selectOfficer = document.getElementById('assignOfficerSelect');
+    const selectComplaint = document.getElementById('assignComplaintSelect');
+    
+    // Clear select choices
+    selectOfficer.innerHTML = '<option value="">Select officer...</option>';
+    selectComplaint.innerHTML = '<option value="">Select pending case...</option>';
+    
+    // Populate officers choices
+    officersListGlobal.forEach(off => {
+        const opt = document.createElement('option');
+        opt.value = off.id;
+        opt.textContent = `${off.username} (${off.active_cases} active cases)`;
+        selectOfficer.appendChild(opt);
+    });
+    
+    // Fetch pending complaints
+    fetch('/get-complaints')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.complaints) {
+                const pendingList = data.complaints.filter(c => c.status === 'pending');
+                if (pendingList.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.disabled = true;
+                    opt.textContent = 'No pending cases available';
+                    selectComplaint.appendChild(opt);
+                } else {
+                    pendingList.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.complaint_id;
+                        opt.textContent = `#${c.complaint_id[-6:] || c.complaint_id} - ${c.complaint_text.substring(0, 40)}... (Score: ${c.severity_score})`;
+                        selectComplaint.appendChild(opt);
+                    });
+                }
+            }
+        });
+}
+
+// Assignment handling logic
+function assignCaseInline(complaintId) {
+    const officerId = document.getElementById(`assign-sel-${complaintId}`).value;
+    if (!officerId) {
+        alert('Please select an officer from the list.');
+        return;
+    }
+    executeCaseAssignment(complaintId, officerId);
+}
+
+document.getElementById('quickAssignForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const complaintId = document.getElementById('assignComplaintSelect').value;
+    const officerId = document.getElementById('assignOfficerSelect').value;
+    
+    if (!complaintId || !officerId) {
+        showAssignmentAlert('Please choose both a complaint and an officer.', 'danger');
+        return;
+    }
+    executeCaseAssignment(complaintId, officerId, true);
+});
+
+function executeCaseAssignment(complaintId, officerId, isQuickAssign = false) {
+    fetch('/assign-complaint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({complaint_id: complaintId, officer_id: officerId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (isQuickAssign) {
+                showAssignmentAlert('Case assigned successfully!', 'success');
+                document.getElementById('quickAssignForm').reset();
+            } else {
+                alert('Complaint assigned successfully!');
+            }
+            // Reload relevant views
+            loadOfficersRegistry();
+            loadAdminComplaints();
+        } else {
+            if (isQuickAssign) {
+                showAssignmentAlert('Assignment failed: ' + data.error, 'danger');
+            } else {
+                alert('Assignment failed: ' + data.error);
+            }
+        }
+    })
+    .catch(err => {
+        if (isQuickAssign) {
+            showAssignmentAlert('Error: ' + err.message, 'danger');
+        } else {
+            alert('Error: ' + err.message);
+        }
+    });
+}
+
+function showAssignmentAlert(msg, type) {
+    const alertDiv = document.getElementById('assignmentAlert');
+    alertDiv.className = `alert alert-${type} py-2 px-3 small`;
+    alertDiv.textContent = msg;
+    alertDiv.style.display = 'block';
+    setTimeout(() => { alertDiv.style.display = 'none'; }, 5000);
+}
+
+// Chart.js Data Visualizations
+function loadAnalyticsData() {
+    fetch('/get_analytics_data')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.stats) {
+                // Populate counts
+                const severityCount = {emergency: 0, high: 0, medium: 0, low: 0};
+                let categoryLabels = [];
+                let categoryValues = [];
+                
+                if (data.stats.by_category) {
+                    categoryLabels = Object.keys(data.stats.by_category);
+                    categoryValues = Object.values(data.stats.by_category);
+                }
+                
+                // Fetch complaints list to do accurate severity levels breakdown
+                fetch('/get-complaints')
+                    .then(res => res.json())
+                    .then(compData => {
+                        if (compData.success && compData.complaints) {
+                            compData.complaints.forEach(c => {
+                                const score = c.severity_score;
+                                if (score >= 8) severityCount.emergency++;
+                                else if (score >= 5) severityCount.high++;
+                                else if (score >= 3) severityCount.medium++;
+                                else severityCount.low++;
+                            });
+                        }
+                        
+                        document.getElementById('analyticsEmergencyCount').textContent = severityCount.emergency;
+                        document.getElementById('analyticsHighCount').textContent = severityCount.high;
+                        document.getElementById('analyticsMediumCount').textContent = severityCount.medium;
+                        document.getElementById('analyticsLowCount').textContent = severityCount.low;
+                    });
+                
+                // Draw Category chart
+                const catCtx = document.getElementById('adminCategoryChart').getContext('2d');
+                if (adminCategoryChartObj) adminCategoryChartObj.destroy();
+                
+                adminCategoryChartObj = new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: categoryLabels.length > 0 ? categoryLabels : ['Infrastructure', 'Utilities', 'Sanitation', 'Public Safety'],
+                        datasets: [{
+                            data: categoryValues.length > 0 ? categoryValues : [40, 25, 20, 15],
+                            backgroundColor: ['#005A9C', '#B45309', '#10B981', '#EF4444', '#64748B']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+                
+                // Draw weekly resolution chart
+                const trendCtx = document.getElementById('adminWeeklyTrendChart').getContext('2d');
+                if (adminTrendChartObj) adminTrendChartObj.destroy();
+                
+                let trendDates = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                let trendCounts = [3, 5, 8, 4, 6, 2, 1];
+                
+                if (data.stats.trend_data && data.stats.trend_data.length > 0) {
+                    trendDates = data.stats.trend_data.map(t => t.date);
+                    trendCounts = data.stats.trend_data.map(t => t.count);
+                }
+                
+                adminTrendChartObj = new Chart(trendCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: trendDates,
+                        datasets: [{
+                            label: 'Grievances Registered',
+                            data: trendCounts,
+                            backgroundColor: '#005A9C',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        });
+}
+
+// Reports statistics summaries
+function loadReportStats() {
+    fetch('/get_analytics_data')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.stats) {
+                const s = data.stats;
+                document.getElementById('reportTotalComplaints').textContent = s.total;
+                document.getElementById('reportResolvedComplaints').textContent = Math.round((s.resolution_rate / 100) * s.total) || 0;
+                document.getElementById('reportResolutionRate').textContent = s.resolution_rate + '% Resolution';
+                document.getElementById('reportPendingComplaints').textContent = s.total - (Math.round((s.resolution_rate / 100) * s.total) || 0);
+                document.getElementById('reportAvgSeverity').textContent = s.avg_severity.toFixed(1);
+            }
+        });
+}
+
+function exportData(format) {
+    if (format === 'csv') {
+        fetch('/get-complaints')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.complaints) {
+                    let csvContent = "data:text/csv;charset=utf-8,";
+                    csvContent += "Complaint ID,Description,Location,Severity,Status,Created At\n";
+                    
+                    data.complaints.forEach(c => {
+                        const sanitizedText = c.complaint_text.replace(/"/g, '""');
+                        csvContent += `"${c.complaint_id}","${sanitizedText}","${c.location}",${c.severity_score},"${c.status}","${c.created_at}"\n`;
+                    });
+                    
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `prioritypulse_audit_log_${new Date().toISOString().slice(0, 10)}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+    }
+}
+
+// Danger Zone: Reset System Complaints list
+function resetSystemSession() {
+    if (confirm('CRITICAL WARNING: This will delete ALL submitted citizens grievances from the registry forever! This cannot be undone. Are you sure you want to proceed?')) {
+        fetch('/reset_session', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Database cleared successfully.');
+                location.reload();
+            } else {
+                alert('Reset failed: ' + data.error);
+            }
+        });
+    }
+}
+
+// Fetch officers global data once on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/get-officers')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.officers) {
+                officersListGlobal = data.officers;
+            }
+        });
+});
+</script>
+{% endblock %}

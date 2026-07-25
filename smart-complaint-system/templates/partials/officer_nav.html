@@ -1,0 +1,42 @@
+<!-- Officer Dashboard Navigation -->
+<a href="#" class="dashboard-nav-item active" data-section="overview">
+    <i class="fas fa-home"></i>
+    <span>Overview</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="assigned-complaints">
+    <i class="fas fa-tasks"></i>
+    <span>Assigned to Me</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="all-complaints">
+    <i class="fas fa-clipboard-list"></i>
+    <span>All Complaints</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="analytics">
+    <i class="fas fa-chart-line"></i>
+    <span>Analytics</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="map-view">
+    <i class="fas fa-map-marked-alt"></i>
+    <span>Map View</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="reports">
+    <i class="fas fa-file-alt"></i>
+    <span>Reports</span>
+</a>
+<a href="#" class="dashboard-nav-item" data-section="team">
+    <i class="fas fa-users"></i>
+    <span>My Team</span>
+</a>
+
+<hr class="my-3" style="border-color: var(--border-color);">
+
+<div class="px-3 mt-3">
+    <div class="text-center">
+        <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+            <i class="fas fa-user-shield" style="font-size: 2rem; color: var(--accent-gold);"></i>
+        </div>
+        <h6 class="mb-1">{{ session.user_fullname }}</h6>
+        <p class="text-muted small mb-0">Officer</p>
+        <p class="text-muted small mb-0">{{ session.user_email }}</p>
+    </div>
+</div>

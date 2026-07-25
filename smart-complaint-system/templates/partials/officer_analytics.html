@@ -1,0 +1,173 @@
+<!-- Officer Analytics Section -->
+<div class="card shadow-sm">
+    <div class="card-header bg-gradient text-white py-3" style="background: linear-gradient(135deg, var(--accent-gold) 0%, #B8860B 100%);">
+        <h4 class="mb-0"><i class="fas fa-chart-analytics me-2"></i>Performance Analytics</h4>
+    </div>
+    <div class="card-body">
+        <!-- Key Metrics Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-3" style="border-left: 4px solid #28a745 !important;">
+                    <div class="card-body p-0">
+                        <i class="fas fa-check-double fa-2x text-success mb-2"></i>
+                        <h2 class="fw-bold text-success mb-1">{{ stats.resolved if stats and stats.resolved else 0 }}</h2>
+                        <small class="text-muted">Cases Resolved</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-3" style="border-left: 4px solid #ffc107 !important;">
+                    <div class="card-body p-0">
+                        <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                        <h2 class="fw-bold text-warning mb-1">{{ pending }}</h2>
+                        <small class="text-muted">Active Cases</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-3" style="border-left: 4px solid #17a2b8 !important;">
+                    <div class="card-body p-0">
+                        <i class="fas fa-percentage fa-2x text-info mb-2"></i>
+                        <h2 class="fw-bold text-info mb-1">{% if stats and stats.total > 0 %}{{ "%.1f"|format((stats.resolved / stats.total) * 100) }}%{% else %}0%{% endif %}</h2>
+                        <small class="text-muted">Success Rate</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-3" style="border-left: 4px solid #dc3545 !important;">
+                    <div class="card-body p-0">
+                        <i class="fas fa-star fa-2x text-danger mb-2"></i>
+                        <h2 class="fw-bold text-danger mb-1">{{ "%.1f"|format(stats.avg_severity) if stats and stats.avg_severity else 0 }}</h2>
+                        <small class="text-muted">Avg Severity</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Complaint Categories</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="categoryChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Weekly Activity</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="weeklyChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm bg-light">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3"><i class="fas fa-list-check me-2"></i>Performance Summary</h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Response Time:</strong> <span class="text-success">2.5 hours (avg)</span></p>
+                                <p class="mb-1"><strong>Resolution Time:</strong> <span class="text-info">1.2 days (avg)</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Pending Review:</strong> <span class="text-warning">{{ pending }}</span></p>
+                                <p class="mb-1"><strong>High Priority:</strong> <span class="text-danger">{% if complaints %}{{ complaints|selectattr('severity_score', 'ge', 8)|list|length }}{% else %}0{% endif %}</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Citizen Satisfaction:</strong> <span class="text-success">94%</span></p>
+                                <p class="mb-1"><strong>Cases This Week:</strong> <span class="text-primary">+12%</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Initialize charts when this tab is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChart) {
+        categoryChart.destroy();
+    }
+    
+    categoryChart = new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Sanitation', 'Infrastructure', 'Public Safety', 'Utilities', 'Other'],
+            datasets: [{
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: [
+                    '#D4AF37',
+                    '#28a745',
+                    '#dc3545',
+                    '#17a2b8',
+                    '#6c757d'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // Weekly Chart
+    const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+    new Chart(weeklyCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Resolved',
+                data: [5, 8, 6, 9, 7, 4, 3],
+                backgroundColor: '#28a745',
+                borderRadius: 5
+            }, {
+                label: 'Pending',
+                data: [2, 3, 1, 4, 2, 3, 2],
+                backgroundColor: '#ffc107',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>

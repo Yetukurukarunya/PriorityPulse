@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - PriorityPulse{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1>WHERE INNOVATION<br>MEETS EFFICIENCY</h1>
+                <p>Smart Public Complaint Prioritization System - AI-powered platform designed to improve government grievance management with faster response times and better resource allocation.</p>
+                <div class="mt-4">
+                    <a href="#submit-complaint" class="btn btn-primary me-3">Submit Complaint</a>
+                    <a href="{{ url_for('analytics') }}" class="btn btn-outline-light">View Insights</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-chart-line" style="font-size: 8rem; color: var(--accent-gold); opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container mt-5">
+    <!-- Stats Section -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <h3 id="totalComplaints">0</h3>
+                <p>Total Complaints</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3 id="avgSeverity">0</h3>
+                <p>Avg Severity Score</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3 id="responseRate">0</h3>
+                <p>Response Rate</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <h3 id="resolutionRate">0</h3>
+                <p>Resolution Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Numbers and Facts Section -->
+    <div class="numbers-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="number-card">
+                        <h2>15+</h2>
+                        <p>Years in Technology</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="number-card">
+                        <h2>82+</h2>
+                        <p>Completed Projects</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="number-card">
+                        <h2>12+</h2>
+                        <p>Awards Won</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 style="color: var(--accent-gold);">WHERE INNOVATION MEETS DESIGN</h2>
+            <p class="text-muted">Explore our featured projects and solutions</p>
+        </div>
+        <div class="col-md-4">
+            <div class="project-card">
+                <div class="project-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="project-content">
+                    <h4>Sky</h4>
+                    <p>Cloud-based complaint management system with real-time tracking</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="project-card">
+                <div class="project-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="project-content">
+                    <h4>Boltshift</h4>
+                    <p>Rapid response system for emergency complaints and incidents</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="project-card">
+                <div class="project-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="project-content">
+                    <h4>BuildingBlocks</h4>
+                    <p>Modular infrastructure complaint resolution platform</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Form Section -->
+    <div class="row" id="submit-complaint">
+        <div class="col-lg-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-pen-alt"></i> SUBMIT NEW COMPLAINT
+                </div>
+                <div class="card-body">
+                    <form id="complaintForm">
+                        <div class="mb-3">
+                            <label class="form-label">Complaint Description</label>
+                            <textarea class="form-control" id="complaintText" rows="4" 
+                                placeholder="Describe your complaint in detail..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" 
+                                placeholder="Enter location">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact (Optional)</label>
+                            <input type="text" class="form-control" id="contact" 
+                                placeholder="Email or phone for updates">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-microphone-alt"></i> ANALYZE & SUBMIT
+                        </button>
+                    </form>
+                    <div id="predictionResult" class="mt-3" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Priority Queue Preview -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list-ol"></i> PRIORITY QUEUE
+                    <a href="{{ url_for('complaints') }}" class="btn btn-sm btn-outline-light float-end">View All</a>
+                </div>
+                <div class="card-body">
+                    <div id="priorityQueuePreview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load initial data
+function loadDashboardData() {
+    fetch('/get_priority_queue')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalComplaints').textContent = data.total_count;
+        });
+    
+    fetch('/get_analytics_data')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('avgSeverity').textContent = data.stats.avg_severity;
+                document.getElementById('responseRate').textContent = data.stats.response_rate + '%';
+                document.getElementById('resolutionRate').textContent = data.stats.resolution_rate + '%';
+            }
+        });
+}
+
+// Handle complaint submission
+document.getElementById('complaintForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const complaintText = document.getElementById('complaintText').value;
+    const location = document.getElementById('location').value;
+    const contact = document.getElementById('contact').value;
+    
+    if (!complaintText.trim()) {
+        alert('Please enter a complaint description');
+        return;
+    }
+    
+    const btn = this.querySelector('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+    btn.disabled = true;
+    
+    fetch('/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({complaint_text: complaintText, location: location, contact: contact})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showResult(data.prediction);
+            document.getElementById('complaintText').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('contact').value = '';
+            loadPriorityQueue();
+            loadDashboardData();
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+});
+
+function showResult(prediction) {
+    const resultDiv = document.getElementById('predictionResult');
+    resultDiv.innerHTML = `
+        <div class="alert alert-${prediction.color}">
+            <strong><i class="fas fa-chart-line"></i> Analysis Result</strong><br>
+            <strong>Severity Score:</strong> ${prediction.severity_score}/10<br>
+            <strong>Category:</strong> ${prediction.category}<br>
+            <strong>Response Time:</strong> ${prediction.response_time}<br>
+            <div class="progress mt-2">
+                <div class="progress-bar" style="width: ${prediction.severity_score * 10}%"></div>
+            </div>
+        </div>
+    `;
+    resultDiv.style.display = 'block';
+    setTimeout(() => resultDiv.style.display = 'none', 5000);
+}
+
+function loadPriorityQueue() {
+    fetch('/get_priority_queue')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('priorityQueuePreview');
+            if (data.complaints.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">No complaints submitted yet</p>';
+                return;
+            }
+            
+            let html = '';
+            data.complaints.slice(0, 5).forEach(complaint => {
+                html += `
+                    <div class="complaint-item priority-${complaint.category.toLowerCase().replace(' ', '-')}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="badge bg-secondary">#${complaint.queue_position}</span>
+                                <span class="badge badge-${complaint.category.toLowerCase().replace(' ', '-')} ms-2">${complaint.category}</span>
+                                <p class="mt-2 mb-1">${complaint.text.substring(0, 100)}...</p>
+                                <small><i class="fas fa-map-marker-alt"></i> ${complaint.location}</small>
+                                <small class="ms-3"><i class="fas fa-clock"></i> ${complaint.timestamp}</small>
+                            </div>
+                            <div>
+                                <span class="badge badge-${complaint.category.toLowerCase().replace(' ', '-')}">
+                                    Score: ${complaint.severity_score}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        });
+}
+
+// Initial load
+loadDashboardData();
+loadPriorityQueue();
+setInterval(() => {
+    loadPriorityQueue();
+    loadDashboardData();
+}, 30000);
+</script>
+{% endblock %}

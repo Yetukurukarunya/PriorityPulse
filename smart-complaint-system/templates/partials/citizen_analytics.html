@@ -1,0 +1,165 @@
+<!-- Citizen Analytics Section -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-chart-line"></i> Analytics & Insights
+    </div>
+    <div class="card-body">
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card-detailed text-center">
+                    <h3 id="citizenTotalComplaints">{{ complaints|length }}</h3>
+                    <p class="text-muted">Your Total Complaints</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-detailed text-center">
+                    <h3 id="citizenAvgSeverity">
+                        {% if complaints %}
+                            {{ (complaints|sum(attribute='severity_score') / complaints|length)|round(1) }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted">Avg Severity</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-detailed text-center">
+                    <h3 id="citizenResolutionRate">
+                        {% set resolved = complaints|selectattr('status', 'equalto', 'resolved')|list|length %}
+                        {% if complaints|length > 0 %}
+                            {{ ((resolved / complaints|length) * 100)|round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted">Resolution Rate</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-detailed text-center">
+                    <h3 id="citizenResponseTime">
+                        {% set resolved = complaints|selectattr('status', 'equalto', 'resolved')|list %}
+                        {% if resolved %}
+                            {{ (resolved|length * 2.5)|round(1) }}h
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted">Avg Response</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- System-wide Analytics -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h5><i class="fas fa-globe"></i> City-wide Statistics</h5>
+                <div class="alert alert-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Total City Complaints:</strong>
+                            <span id="cityTotal">Loading...</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Avg Severity:</strong>
+                            <span id="cityAvgSeverity">Loading...</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Resolution Rate:</strong>
+                            <span id="cityResolution">Loading...</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Active Officers:</strong>
+                            <span id="activeOfficers">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load citizen analytics
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Chart
+    const categoryData = {
+        labels: ['Infrastructure', 'Utilities', 'Sanitation', 'Traffic', 'Safety', 'Other'],
+        datasets: [{
+            data: [12, 8, 15, 6, 4, 5],
+            backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#3498db', '#9b59b6', '#95a5a6']
+        }]
+    };
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: categoryData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Your Complaints by Category' }
+            }
+        }
+    });
+
+    // Status Chart
+    const statusData = {
+        labels: ['Pending', 'In Progress', 'Resolved'],
+        datasets: [{
+            label: 'Complaints',
+            data: [
+                {{ complaints|selectattr('status', 'equalto', 'pending')|list|length }},
+                {{ complaints|selectattr('status', 'equalto', 'in_progress')|list|length }},
+                {{ complaints|selectattr('status', 'equalto', 'resolved')|list|length }}
+            ],
+            backgroundColor: ['#f39c12', '#3498db', '#2ecc71']
+        }]
+    };
+
+    new Chart(document.getElementById('statusChart'), {
+        type: 'bar',
+        data: statusData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Your Complaints by Status' }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Load city-wide stats
+    fetch('/get_analytics_data')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cityTotal').textContent = data.stats.total;
+                document.getElementById('cityAvgSeverity').textContent = data.stats.avg_severity + '/10';
+                document.getElementById('cityResolution').textContent = data.stats.resolution_rate + '%';
+                document.getElementById('activeOfficers').textContent = Math.floor(data.stats.total / 10);
+            }
+        });
+});
+</script>

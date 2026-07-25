@@ -1,0 +1,202 @@
+complaint_text,severity_score,category,location,latitude,longitude,date
+"Medical emergency at city park, person having heart attack",9.9,Emergency,Eastside,40.742005719666075,-73.96737033131643,2024-01-01 00:00:00
+"medical emergency at city park, person having heart attack",10.0,Emergency,Westside,40.737499212935845,-73.93934429153862,2024-01-01 01:00:00
+"URGENT: Medical emergency at city park, person having heart attack",9.9,Emergency,Southside,40.716962358399506,-73.97866393324371,2024-01-01 02:00:00
+"Complaint: Medical emergency at city park, person having heart attack",9.9,Emergency,Westside,40.75130744504666,-73.93794770808127,2024-01-01 03:00:00
+"Medical emergency at city park, person having heart attack in Downtown",10.0,Emergency,Westside,40.727587960995194,-73.9419011745495,2024-01-01 04:00:00
+"Medical emergency at city park, person having heart attack in Northside",9.8,Emergency,Northside,40.72139850332943,-73.99213798765692,2024-01-01 05:00:00
+"Medical emergency at city park, person having heart attack in Southside",10.0,Emergency,Southside,40.71467973402567,-74.00108921989803,2024-01-01 06:00:00
+"Medical emergency at city park, person having heart attack in Eastside",10.0,Emergency,Southside,40.74004016468098,-73.99886491750247,2024-01-01 07:00:00
+"Medical emergency at city park, person having heart attack in Westside",9.9,Emergency,Southside,40.744035717080926,-74.00470989474387,2024-01-01 08:00:00
+"Fire in residential building downtown, multiple families trapped",10.0,Emergency,Westside,40.71356469891357,-73.99931343837848,2024-01-01 09:00:00
+"fire in residential building downtown, multiple families trapped",10.0,Emergency,Eastside,40.7364074899876,-73.95764312044211,2024-01-01 10:00:00
+"URGENT: Fire in residential building downtown, multiple families trapped",10.0,Emergency,Southside,40.723241455236625,-74.00095984368902,2024-01-01 11:00:00
+"Complaint: Fire in residential building downtown, multiple families trapped",9.6,Emergency,Westside,40.742542465637875,-73.9834165253752,2024-01-01 12:00:00
+"Fire in residential building downtown, multiple families trapped in Downtown",10.0,Emergency,Northside,40.72083829237713,-73.94618282798336,2024-01-01 13:00:00
+"Fire in residential building downtown, multiple families trapped in Northside",10.0,Emergency,Eastside,40.74465222972652,-74.0043523469499,2024-01-01 14:00:00
+"Fire in residential building downtown, multiple families trapped in Southside",9.8,Emergency,Northside,40.73062849946445,-73.9483356314327,2024-01-01 15:00:00
+"Fire in residential building downtown, multiple families trapped in Eastside",10.0,Emergency,Eastside,40.75598325248076,-73.98604468194604,2024-01-01 16:00:00
+"Fire in residential building downtown, multiple families trapped in Westside",10.0,Emergency,Westside,40.71913971552513,-73.99763393020439,2024-01-01 17:00:00
+"Gas leak reported near school, strong smell of gas",10.0,Emergency,Downtown,40.72852315878342,-73.95667100869221,2024-01-01 18:00:00
+"gas leak reported near school, strong smell of gas",9.8,Emergency,Eastside,40.71803112932919,-73.96147084644798,2024-01-01 19:00:00
+"URGENT: Gas leak reported near school, strong smell of gas",10.0,Emergency,Northside,40.75542837580264,-73.94387498144228,2024-01-01 20:00:00
+"Complaint: Gas leak reported near school, strong smell of gas",9.7,Emergency,Westside,40.75324534419086,-73.95395697009869,2024-01-01 21:00:00
+"Gas leak reported near school, strong smell of gas in Downtown",9.6,Emergency,Eastside,40.72469110903767,-73.94911355012874,2024-01-01 22:00:00
+"Gas leak reported near school, strong smell of gas in Northside",9.6,Emergency,Downtown,40.743225264522174,-73.98603195226195,2024-01-01 23:00:00
+"Gas leak reported near school, strong smell of gas in Southside",9.6,Emergency,Downtown,40.75047394342928,-73.9934372803004,2024-01-02 00:00:00
+"Gas leak reported near school, strong smell of gas in Eastside",9.7,Emergency,Southside,40.73839475741473,-73.95285647558383,2024-01-02 01:00:00
+"Gas leak reported near school, strong smell of gas in Westside",9.6,Emergency,Southside,40.737216891662214,-73.94887610045987,2024-01-02 02:00:00
+"Building collapse on main street, people trapped under debris",10.0,Emergency,Northside,40.723949390610514,-73.93587223594635,2024-01-02 03:00:00
+"building collapse on main street, people trapped under debris",9.7,Emergency,Eastside,40.717092037595854,-73.97678666847467,2024-01-02 04:00:00
+"URGENT: Building collapse on main street, people trapped under debris",9.8,Emergency,Eastside,40.754161646441645,-73.97966111952587,2024-01-02 05:00:00
+"Complaint: Building collapse on main street, people trapped under debris",10.0,Emergency,Southside,40.75430927243523,-73.95102996237947,2024-01-02 06:00:00
+"Building collapse on main street, people trapped under debris in Downtown",10.0,Emergency,Eastside,40.7419859771803,-73.98187110935008,2024-01-02 07:00:00
+"Building collapse on main street, people trapped under debris in Northside",10.0,Emergency,Eastside,40.72842927336735,-73.94010238134726,2024-01-02 08:00:00
+"Building collapse on main street, people trapped under debris in Southside",9.7,Emergency,Downtown,40.72889856138964,-73.94522437716951,2024-01-02 09:00:00
+"Building collapse on main street, people trapped under debris in Eastside",9.7,Emergency,Southside,40.746266556795916,-73.97562722286185,2024-01-02 10:00:00
+"Building collapse on main street, people trapped under debris in Westside",9.5,Emergency,Westside,40.75415678298381,-73.95283832840036,2024-01-02 11:00:00
+"Child missing from playground, last seen 30 minutes ago",8.7,Emergency,Southside,40.75369468415862,-73.9525783645148,2024-01-02 12:00:00
+"child missing from playground, last seen 30 minutes ago",8.8,Emergency,Westside,40.748752262664034,-73.99869883008641,2024-01-02 13:00:00
+"URGENT: Child missing from playground, last seen 30 minutes ago",8.7,Emergency,Downtown,40.74239765888771,-73.94209925420708,2024-01-02 14:00:00
+"Complaint: Child missing from playground, last seen 30 minutes ago",8.6,Emergency,Northside,40.71667885238627,-73.97022813203068,2024-01-02 15:00:00
+"Child missing from playground, last seen 30 minutes ago in Downtown",8.6,Emergency,Eastside,40.72025108371976,-73.94748681139957,2024-01-02 16:00:00
+"Child missing from playground, last seen 30 minutes ago in Northside",9.0,Emergency,Downtown,40.754223348091095,-73.98334048824704,2024-01-02 17:00:00
+"Child missing from playground, last seen 30 minutes ago in Southside",8.7,Emergency,Eastside,40.74075637965031,-73.94259695542246,2024-01-02 18:00:00
+"Child missing from playground, last seen 30 minutes ago in Eastside",8.9,Emergency,Northside,40.71322398407953,-73.97844452114562,2024-01-02 19:00:00
+"Child missing from playground, last seen 30 minutes ago in Westside",9.0,Emergency,Northside,40.71747783812612,-74.0052326942752,2024-01-02 20:00:00
+"Severe water contamination, people getting sick",9.2,Emergency,Downtown,40.74338743155588,-73.94189895606951,2024-01-02 21:00:00
+"severe water contamination, people getting sick",8.5,Emergency,Northside,40.71303333901531,-73.99953690328354,2024-01-02 22:00:00
+"URGENT: Severe water contamination, people getting sick",9.3,Emergency,Westside,40.72021325117035,-73.98339259445859,2024-01-02 23:00:00
+"Complaint: Severe water contamination, people getting sick",9.1,Emergency,Northside,40.7380966276898,-73.9387356127328,2024-01-03 00:00:00
+"Severe water contamination, people getting sick in Downtown",8.6,Emergency,Eastside,40.74469636861363,-73.93869701399682,2024-01-03 01:00:00
+"Severe water contamination, people getting sick in Northside",9.4,Emergency,Eastside,40.742855414063065,-73.96540059752087,2024-01-03 02:00:00
+"Severe water contamination, people getting sick in Southside",9.4,Emergency,Eastside,40.72313881516613,-73.96126592537837,2024-01-03 03:00:00
+"Severe water contamination, people getting sick in Eastside",8.6,Emergency,Eastside,40.74563146210412,-73.97425005704393,2024-01-03 04:00:00
+"Severe water contamination, people getting sick in Westside",8.8,Emergency,Westside,40.723737182933604,-73.98524067736378,2024-01-03 05:00:00
+Major water pipe burst flooding street,8.3,High Priority,Southside,40.727800926085145,-73.98273055018781,2024-01-03 06:00:00
+major water pipe burst flooding street,8.2,High Priority,Downtown,40.74721325377594,-73.95838569330974,2024-01-03 07:00:00
+URGENT: Major water pipe burst flooding street,7.7,High Priority,Eastside,40.74274807664607,-73.9527318833158,2024-01-03 08:00:00
+Complaint: Major water pipe burst flooding street,7.7,High Priority,Northside,40.75194919922378,-73.9499562037042,2024-01-03 09:00:00
+Major water pipe burst flooding street in Downtown,7.9,High Priority,Eastside,40.743115954335046,-73.95009503549014,2024-01-03 10:00:00
+Major water pipe burst flooding street in Northside,8.0,High Priority,Northside,40.73899902661376,-73.99954260790415,2024-01-03 11:00:00
+Major water pipe burst flooding street in Southside,8.1,High Priority,Northside,40.71711840679688,-73.97099504242705,2024-01-03 12:00:00
+Major water pipe burst flooding street in Eastside,7.9,High Priority,Eastside,40.72975169852104,-74.00192483979082,2024-01-03 13:00:00
+Major water pipe burst flooding street in Westside,8.0,High Priority,Westside,40.72502582915013,-73.96709335513148,2024-01-03 14:00:00
+Road accident with injuries at intersection,8.2,High Priority,Northside,40.72404792255978,-73.97473964050276,2024-01-03 15:00:00
+road accident with injuries at intersection,7.5,High Priority,Northside,40.757655786574084,-73.94315054386071,2024-01-03 16:00:00
+URGENT: Road accident with injuries at intersection,7.8,High Priority,Eastside,40.73092180510714,-73.98115521711131,2024-01-03 17:00:00
+Complaint: Road accident with injuries at intersection,8.2,High Priority,Northside,40.75392334619366,-73.99771165523693,2024-01-03 18:00:00
+Road accident with injuries at intersection in Downtown,8.4,High Priority,Northside,40.74189549065847,-73.99587618891066,2024-01-03 19:00:00
+Road accident with injuries at intersection in Northside,8.0,High Priority,Eastside,40.749440801093264,-73.9520850472744,2024-01-03 20:00:00
+Road accident with injuries at intersection in Southside,8.0,High Priority,Eastside,40.735971569992145,-73.9622301611172,2024-01-03 21:00:00
+Road accident with injuries at intersection in Eastside,7.6,High Priority,Downtown,40.73939526908127,-73.9988405145305,2024-01-03 22:00:00
+Road accident with injuries at intersection in Westside,7.9,High Priority,Westside,40.73550506568505,-74.00004523812706,2024-01-03 23:00:00
+Power outage affecting hospital area,8.0,High Priority,Westside,40.72180070173749,-73.95637138549269,2024-01-04 00:00:00
+power outage affecting hospital area,7.7,High Priority,Northside,40.746105042513555,-74.00084837914942,2024-01-04 01:00:00
+URGENT: Power outage affecting hospital area,7.8,High Priority,Westside,40.72574360590853,-73.94781230780224,2024-01-04 02:00:00
+Complaint: Power outage affecting hospital area,7.9,High Priority,Northside,40.71392096605249,-73.95599805031732,2024-01-04 03:00:00
+Power outage affecting hospital area in Downtown,7.5,High Priority,Downtown,40.74255627284132,-74.00024050633056,2024-01-04 04:00:00
+Power outage affecting hospital area in Northside,7.8,High Priority,Eastside,40.720964802320665,-73.99999348984277,2024-01-04 05:00:00
+Power outage affecting hospital area in Southside,7.7,High Priority,Eastside,40.75615514073867,-73.93614591784211,2024-01-04 06:00:00
+Power outage affecting hospital area in Eastside,7.8,High Priority,Eastside,40.756776107399816,-73.97950162766047,2024-01-04 07:00:00
+Power outage affecting hospital area in Westside,7.6,High Priority,Westside,40.75497524838916,-73.97975853598766,2024-01-04 08:00:00
+Sewage overflow on residential street,7.4,High Priority,Downtown,40.72986431608177,-73.94845379063817,2024-01-04 09:00:00
+sewage overflow on residential street,7.1,High Priority,Westside,40.71351255002198,-73.93893480072121,2024-01-04 10:00:00
+Complaint: Sewage overflow on residential street,7.2,High Priority,Westside,40.75559548573529,-73.93619112468133,2024-01-04 11:00:00
+Sewage overflow on residential street in Downtown,7.3,High Priority,Downtown,40.73253928923743,-73.95266082448366,2024-01-04 12:00:00
+Sewage overflow on residential street in Northside,7.0,High Priority,Downtown,40.75736278715791,-73.97936082134441,2024-01-04 13:00:00
+Sewage overflow on residential street in Southside,6.6,High Priority,Downtown,40.757222880943814,-74.00008814925773,2024-01-04 14:00:00
+Sewage overflow on residential street in Eastside,7.0,High Priority,Downtown,40.752123735897044,-73.95097799835233,2024-01-04 15:00:00
+Sewage overflow on residential street in Westside,7.1,High Priority,Eastside,40.726374093924406,-73.9664649791187,2024-01-04 16:00:00
+Dangerous tree fallen on house,7.2,High Priority,Southside,40.73055300528855,-73.97596508174531,2024-01-04 17:00:00
+dangerous tree fallen on house,6.9,High Priority,Southside,40.75203740055692,-73.94183010953529,2024-01-04 18:00:00
+Complaint: Dangerous tree fallen on house,6.6,High Priority,Downtown,40.7274101044377,-73.99812721825272,2024-01-04 19:00:00
+Dangerous tree fallen on house in Downtown,6.8,High Priority,Southside,40.72061361562223,-73.97112214261621,2024-01-04 20:00:00
+Dangerous tree fallen on house in Northside,6.9,High Priority,Southside,40.73846853819933,-74.00519616195047,2024-01-04 21:00:00
+Dangerous tree fallen on house in Southside,7.1,High Priority,Downtown,40.75595673508881,-73.97281882654681,2024-01-04 22:00:00
+Dangerous tree fallen on house in Eastside,7.1,High Priority,Southside,40.74488697362671,-74.00201372808172,2024-01-04 23:00:00
+Dangerous tree fallen on house in Westside,6.9,High Priority,Westside,40.73907981994112,-73.99758769152822,2024-01-05 00:00:00
+Electrical short circuit causing sparks,7.5,High Priority,Northside,40.717279836362835,-73.99767914172818,2024-01-05 01:00:00
+electrical short circuit causing sparks,7.1,High Priority,Northside,40.74115183315083,-73.96003591061017,2024-01-05 02:00:00
+Complaint: Electrical short circuit causing sparks,6.7,High Priority,Downtown,40.7584414824898,-73.95318002254801,2024-01-05 03:00:00
+Electrical short circuit causing sparks in Downtown,6.6,High Priority,Eastside,40.71925787310241,-73.96469749143112,2024-01-05 04:00:00
+Electrical short circuit causing sparks in Northside,6.7,High Priority,Downtown,40.73669499697397,-73.937878183568,2024-01-05 05:00:00
+Electrical short circuit causing sparks in Southside,6.7,High Priority,Eastside,40.75324689861588,-73.97945916296972,2024-01-05 06:00:00
+Electrical short circuit causing sparks in Eastside,6.7,High Priority,Northside,40.746949433278466,-73.98577158429124,2024-01-05 07:00:00
+Electrical short circuit causing sparks in Westside,6.7,High Priority,Downtown,40.74493242565988,-73.94450318172419,2024-01-05 08:00:00
+Traffic signal not working at busy intersection,5.8,Medium Priority,Westside,40.745184516271806,-73.99016941463282,2024-01-05 09:00:00
+traffic signal not working at busy intersection,5.7,Medium Priority,Southside,40.72937254207123,-73.9378038442076,2024-01-05 10:00:00
+Complaint: Traffic signal not working at busy intersection,6.4,Medium Priority,Eastside,40.72633458402059,-74.00513946319197,2024-01-05 11:00:00
+Traffic signal not working at busy intersection in Downtown,5.6,Medium Priority,Southside,40.75011154926756,-73.93733257906909,2024-01-05 12:00:00
+Traffic signal not working at busy intersection in Northside,6.0,Medium Priority,Southside,40.75014622749471,-74.0029442782339,2024-01-05 13:00:00
+Traffic signal not working at busy intersection in Southside,5.9,Medium Priority,Downtown,40.752772033886544,-73.94290706755017,2024-01-05 14:00:00
+Traffic signal not working at busy intersection in Eastside,6.5,Medium Priority,Southside,40.75490038947285,-73.96863876147668,2024-01-05 15:00:00
+Traffic signal not working at busy intersection in Westside,5.6,Medium Priority,Westside,40.73637288458749,-73.93569809243475,2024-01-05 16:00:00
+Streetlight not working for 3 days,4.9,Medium Priority,Southside,40.73591990118508,-74.00077520321673,2024-01-05 17:00:00
+streetlight not working for 3 days,5.5,Medium Priority,Downtown,40.74960140775037,-73.96678711666438,2024-01-05 18:00:00
+Complaint: Streetlight not working for 3 days,5.4,Medium Priority,Westside,40.74276333720886,-73.93737338047816,2024-01-05 19:00:00
+Streetlight not working for 3 days in Downtown,5.3,Medium Priority,Northside,40.74516067304158,-73.96896467263275,2024-01-05 20:00:00
+Streetlight not working for 3 days in Northside,4.8,Medium Priority,Southside,40.749486042061,-73.96143857642002,2024-01-05 21:00:00
+Streetlight not working for 3 days in Southside,4.7,Medium Priority,Downtown,40.75382924625779,-73.95674099281989,2024-01-05 22:00:00
+Streetlight not working for 3 days in Eastside,5.2,Medium Priority,Northside,40.728381576730854,-73.97381849261444,2024-01-05 23:00:00
+Streetlight not working for 3 days in Westside,5.4,Medium Priority,Northside,40.7301143741167,-73.96156888793004,2024-01-06 00:00:00
+Pothole causing traffic issues,5.1,Medium Priority,Eastside,40.71713256742667,-73.96463054671584,2024-01-06 01:00:00
+pothole causing traffic issues,5.1,Medium Priority,Westside,40.739458714499925,-73.94219801285723,2024-01-06 02:00:00
+Complaint: Pothole causing traffic issues,4.8,Medium Priority,Southside,40.71445693882203,-74.00278239627183,2024-01-06 03:00:00
+Pothole causing traffic issues in Downtown,5.3,Medium Priority,Downtown,40.73426406863591,-73.98610780617688,2024-01-06 04:00:00
+Pothole causing traffic issues in Northside,4.7,Medium Priority,Eastside,40.737815917660015,-73.93871086692738,2024-01-06 05:00:00
+Pothole causing traffic issues in Southside,4.8,Medium Priority,Westside,40.726009551723116,-73.94296932410052,2024-01-06 06:00:00
+Pothole causing traffic issues in Eastside,4.9,Medium Priority,Eastside,40.74003741331223,-73.97373950190277,2024-01-06 07:00:00
+Pothole causing traffic issues in Westside,5.0,Medium Priority,Westside,40.71420606152219,-73.96209461207565,2024-01-06 08:00:00
+Garbage not collected for a week,3.7,Medium Priority,Westside,40.71452175150134,-73.98636141224493,2024-01-06 09:00:00
+garbage not collected for a week,3.6,Medium Priority,Southside,40.75072188584641,-73.99268102189156,2024-01-06 10:00:00
+Complaint: Garbage not collected for a week,4.1,Medium Priority,Westside,40.729404788569056,-73.97317015293025,2024-01-06 11:00:00
+Garbage not collected for a week in Downtown,3.8,Medium Priority,Eastside,40.71865748963325,-73.98098266225576,2024-01-06 12:00:00
+Garbage not collected for a week in Northside,4.1,Medium Priority,Westside,40.73687541428853,-73.96467714728095,2024-01-06 13:00:00
+Garbage not collected for a week in Southside,3.7,Medium Priority,Southside,40.748296702797845,-74.00049638770288,2024-01-06 14:00:00
+Garbage not collected for a week in Eastside,4.0,Medium Priority,Southside,40.722749349367604,-73.93701284761723,2024-01-06 15:00:00
+Garbage not collected for a week in Westside,4.0,Medium Priority,Eastside,40.74151525093526,-73.93617627929083,2024-01-06 16:00:00
+Water leakage from pipeline,3.6,Medium Priority,Northside,40.716734518136214,-73.9565701506474,2024-01-06 17:00:00
+water leakage from pipeline,3.8,Medium Priority,Northside,40.715182527345874,-73.96804437726283,2024-01-06 18:00:00
+Complaint: Water leakage from pipeline,3.6,Medium Priority,Westside,40.73729544851529,-73.98408544476693,2024-01-06 19:00:00
+Water leakage from pipeline in Downtown,3.6,Medium Priority,Downtown,40.73772327910623,-73.94838331260475,2024-01-06 20:00:00
+Water leakage from pipeline in Northside,4.5,Medium Priority,Westside,40.74218551845907,-73.95752103298318,2024-01-06 21:00:00
+Water leakage from pipeline in Southside,3.8,Medium Priority,Eastside,40.74627281048461,-73.99448672069438,2024-01-06 22:00:00
+Water leakage from pipeline in Eastside,4.3,Medium Priority,Eastside,40.75778678086322,-73.94150635533784,2024-01-06 23:00:00
+Water leakage from pipeline in Westside,3.8,Medium Priority,Eastside,40.73660144605668,-73.94776436320103,2024-01-07 00:00:00
+Noise complaint from construction site,4.2,Medium Priority,Eastside,40.72768829340259,-73.93875416613892,2024-01-07 01:00:00
+noise complaint from construction site,4.3,Medium Priority,Eastside,40.74945808357884,-73.9546190588061,2024-01-07 02:00:00
+Complaint: Noise complaint from construction site,4.1,Medium Priority,Southside,40.72528536678318,-73.96257020412774,2024-01-07 03:00:00
+Noise complaint from construction site in Downtown,4.0,Medium Priority,Northside,40.73303658249453,-73.97638839303062,2024-01-07 04:00:00
+Noise complaint from construction site in Northside,3.9,Medium Priority,Eastside,40.71641683917988,-73.93996282337854,2024-01-07 05:00:00
+Noise complaint from construction site in Southside,3.8,Medium Priority,Downtown,40.71396866927145,-73.94468267662337,2024-01-07 06:00:00
+Noise complaint from construction site in Eastside,4.4,Medium Priority,Downtown,40.75717809191665,-74.00279851815648,2024-01-07 07:00:00
+Noise complaint from construction site in Westside,4.3,Medium Priority,Downtown,40.75133868355561,-74.0041332182056,2024-01-07 08:00:00
+Request for new garbage bin,2.5,Low Priority,Downtown,40.744884410900916,-73.97934639362504,2024-01-07 09:00:00
+request for new garbage bin,1.6,Low Priority,Southside,40.731652730737494,-73.94861282418064,2024-01-07 10:00:00
+Complaint: Request for new garbage bin,2.2,Low Priority,Downtown,40.72078886815527,-73.9361008500445,2024-01-07 11:00:00
+Request for new garbage bin in Downtown,2.4,Low Priority,Eastside,40.72001174766714,-73.99535048410986,2024-01-07 12:00:00
+Request for new garbage bin in Northside,1.7,Low Priority,Westside,40.72433619760539,-73.96393554535307,2024-01-07 13:00:00
+Request for new garbage bin in Southside,1.6,Low Priority,Downtown,40.73811934924295,-73.97903292735052,2024-01-07 14:00:00
+Request for new garbage bin in Eastside,2.2,Low Priority,Southside,40.74574287203647,-73.93733006063472,2024-01-07 15:00:00
+Request for new garbage bin in Westside,2.1,Low Priority,Southside,40.74323509906669,-73.94637798024199,2024-01-07 16:00:00
+Street name board damaged,2.3,Low Priority,Downtown,40.72570495264921,-73.94664632770645,2024-01-07 17:00:00
+street name board damaged,1.6,Low Priority,Westside,40.75681928943857,-73.97281652428651,2024-01-07 18:00:00
+Complaint: Street name board damaged,2.3,Low Priority,Downtown,40.74681704785967,-73.9766307792345,2024-01-07 19:00:00
+Street name board damaged in Downtown,1.7,Low Priority,Southside,40.738355721820774,-73.9866427793073,2024-01-07 20:00:00
+Street name board damaged in Northside,1.7,Low Priority,Northside,40.741000326401405,-74.00200861483711,2024-01-07 21:00:00
+Street name board damaged in Southside,1.7,Low Priority,Eastside,40.73214356287792,-73.94477765576114,2024-01-07 22:00:00
+Street name board damaged in Eastside,2.3,Low Priority,Southside,40.724220398616005,-73.94844660855358,2024-01-07 23:00:00
+Street name board damaged in Westside,2.2,Low Priority,Downtown,40.72921034048582,-73.93521998873133,2024-01-08 00:00:00
+Public park bench broken,1.0,Low Priority,Eastside,40.747736705692404,-73.93543811193516,2024-01-08 01:00:00
+public park bench broken,1.0,Low Priority,Downtown,40.71346353982583,-73.96667543524333,2024-01-08 02:00:00
+Complaint: Public park bench broken,1.4,Low Priority,Downtown,40.71815094872737,-73.95155569100521,2024-01-08 03:00:00
+Public park bench broken in Downtown,1.0,Low Priority,Northside,40.714920721797206,-73.93911058632432,2024-01-08 04:00:00
+Public park bench broken in Northside,1.3,Low Priority,Eastside,40.7146775977869,-73.94584496474003,2024-01-08 05:00:00
+Public park bench broken in Southside,1.0,Low Priority,Eastside,40.7522367329229,-73.98848775439659,2024-01-08 06:00:00
+Public park bench broken in Eastside,1.0,Low Priority,Northside,40.74523862731742,-73.97410147522004,2024-01-08 07:00:00
+Public park bench broken in Westside,1.0,Low Priority,Southside,40.73465941352092,-73.99685551340727,2024-01-08 08:00:00
+Graffiti on public wall,1.0,Low Priority,Downtown,40.717310154806015,-73.93845318727007,2024-01-08 09:00:00
+graffiti on public wall,1.2,Low Priority,Westside,40.735463491842886,-73.96308283588087,2024-01-08 10:00:00
+Complaint: Graffiti on public wall,1.0,Low Priority,Downtown,40.73462704863298,-73.98981208937036,2024-01-08 11:00:00
+Graffiti on public wall in Downtown,1.0,Low Priority,Downtown,40.720784606202855,-73.95844359154407,2024-01-08 12:00:00
+Graffiti on public wall in Northside,1.4,Low Priority,Southside,40.73280056102987,-73.96223652057557,2024-01-08 13:00:00
+Graffiti on public wall in Southside,1.0,Low Priority,Downtown,40.73117106825572,-73.98064207956327,2024-01-08 14:00:00
+Graffiti on public wall in Eastside,1.0,Low Priority,Northside,40.74119068952021,-73.99796012247226,2024-01-08 15:00:00
+Graffiti on public wall in Westside,1.4,Low Priority,Northside,40.742077817304995,-73.95845261775203,2024-01-08 16:00:00
+Street sweeping request,1.1,Low Priority,Eastside,40.71488851485049,-73.969162214776,2024-01-08 17:00:00
+street sweeping request,1.0,Low Priority,Westside,40.73006964153428,-73.95131985786512,2024-01-08 18:00:00
+Complaint: Street sweeping request,1.4,Low Priority,Downtown,40.741652142114425,-73.96917242412127,2024-01-08 19:00:00
+Street sweeping request in Downtown,1.1,Low Priority,Downtown,40.73599458152054,-73.94566554977744,2024-01-08 20:00:00
+Street sweeping request in Northside,1.0,Low Priority,Southside,40.75228418167878,-73.96692499581476,2024-01-08 21:00:00
+Street sweeping request in Southside,1.0,Low Priority,Northside,40.743165776417634,-73.96628559161529,2024-01-08 22:00:00
+Street sweeping request in Eastside,1.3,Low Priority,Westside,40.720311277088456,-73.94393292493179,2024-01-08 23:00:00
+Street sweeping request in Westside,1.1,Low Priority,Eastside,40.71605321925516,-73.97743341307216,2024-01-09 00:00:00
+Tree trimming request,2.0,Low Priority,Northside,40.74241552872531,-73.9965117218257,2024-01-09 01:00:00
+tree trimming request,2.4,Low Priority,Eastside,40.71402217141597,-74.00396218651701,2024-01-09 02:00:00
+Complaint: Tree trimming request,2.3,Low Priority,Southside,40.73980425429671,-73.9525362822983,2024-01-09 03:00:00
+Tree trimming request in Downtown,1.7,Low Priority,Southside,40.75614461412969,-73.96208208376417,2024-01-09 04:00:00
+Tree trimming request in Northside,1.8,Low Priority,Downtown,40.73932935960008,-73.95615115241857,2024-01-09 05:00:00
+Tree trimming request in Southside,1.7,Low Priority,Westside,40.73069463359812,-73.99092213736517,2024-01-09 06:00:00
+Tree trimming request in Eastside,2.2,Low Priority,Eastside,40.74245558687019,-73.99634489952845,2024-01-09 07:00:00
+Tree trimming request in Westside,1.5,Low Priority,Northside,40.73392545825166,-74.00497023767072,2024-01-09 08:00:00

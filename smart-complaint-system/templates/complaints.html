@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Complaints Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-list-alt"></i> All Complaints
+        <div class="float-end">
+            <select id="filterStatus" class="form-select form-select-sm" title="Filter by status" style="width: auto; display: inline-block;">
+                <option value="all">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+            <select id="filterPriority" class="form-select form-select-sm" title="Filter by priority" style="width: auto; display: inline-block;">
+                <option value="all">All Priorities</option>
+                <option value="Emergency">Emergency</option>
+                <option value="High Priority">High Priority</option>
+                <option value="Medium Priority">Medium Priority</option>
+                <option value="Low Priority">Low Priority</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="complaintsList">
+            {% for complaint in complaints %}
+            <div class="complaint-item priority-{{ complaint.category.lower().replace(' ', '-') }}" 
+                 data-status="{{ complaint.status }}"
+                 data-priority="{{ complaint.category }}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <span class="badge bg-secondary">ID: {{ complaint.complaint_id }}</span>
+                        <span class="status-badge status-{{ complaint.status.lower().replace(' ', '-') }}">
+                            {{ complaint.status }}
+                        </span>
+                        <h6 class="mt-2">{{ complaint.complaint_text[:100] }}{% if complaint.complaint_text|length > 100 %}...{% endif %}</h6>
+                        <p class="text-muted mb-1">
+                            <i class="fas fa-map-marker-alt"></i> {{ complaint.location or 'Unknown' }} | 
+                            <i class="fas fa-clock"></i> {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') if complaint.created_at else 'N/A' }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="severity-badge severity-{{ complaint.category.lower().replace(' ', '-') }}">
+                            Score: {{ complaint.severity_score }}
+                        </span>
+                        <div class="mt-2">
+                            <select class="form-select form-select-sm status-select" data-id="{{ complaint.complaint_id }}" title="Update status">
+                                <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="in_progress" {% if complaint.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted text-center">No complaints submitted yet</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Filter complaints
+const filterStatus = document.getElementById('filterStatus');
+const filterPriority = document.getElementById('filterPriority');
+
+if (filterStatus) {
+    filterStatus.addEventListener('change', filterComplaints);
+}
+if (filterPriority) {
+    filterPriority.addEventListener('change', filterComplaints);
+}
+
+function filterComplaints() {
+    const status = document.getElementById('filterStatus').value;
+    const priority = document.getElementById('filterPriority').value;
+    const complaints = document.querySelectorAll('.complaint-item');
+    
+    complaints.forEach(complaint => {
+        const complaintStatus = complaint.dataset.status;
+        const complaintPriority = complaint.dataset.priority;
+        
+        let show = true;
+        if (status !== 'all' && complaintStatus !== status) show = false;
+        if (priority !== 'all' && complaintPriority !== priority) show = false;
+        
+        complaint.style.display = show ? 'block' : 'none';
+    });
+}
+
+// Update status
+document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', function() {
+        const complaintId = this.dataset.id;
+        const newStatus = this.value;
+        
+        fetch('/update-status', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({complaint_id: complaintId, status: newStatus})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+        });
+    });
+});
+</script>
+{% endblock %}

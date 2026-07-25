@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+
+{% block title %}Citizen Dashboard - PriorityPulse{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 style="color: var(--accent-gold);">
+                <i class="fas fa-user-circle me-2"></i>Citizen Dashboard
+            </h2>
+            <p class="text-muted">Welcome back, {{ session.user_fullname }}! Manage your complaints and track their status.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4" id="overview-section">
+        <div class="col-md-3">
+            <div class="stat-card-detailed">
+                <div class="stat-icon-wrapper bg-gold">
+                    <i class="fas fa-clipboard-list fa-2x"></i>
+                </div>
+                <h3 id="totalComplaints">{{ complaints|length }}</h3>
+                <p class="text-muted mb-0">Total Complaints</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-detailed">
+                <div class="stat-icon-wrapper bg-green">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <h3 id="resolvedComplaints">
+                    {% set resolved = complaints|selectattr('status', 'equalto', 'resolved')|list|length %}
+                    {{ resolved }}
+                </h3>
+                <p class="text-muted mb-0">Resolved</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-detailed">
+                <div class="stat-icon-wrapper bg-blue">
+                    <i class="fas fa-clock fa-2x"></i>
+                </div>
+                <h3 id="pendingComplaints">
+                    {% set pending = complaints|selectattr('status', 'equalto', 'pending')|list|length %}
+                    {{ pending }}
+                </h3>
+                <p class="text-muted mb-0">Pending</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-detailed">
+                <div class="stat-icon-wrapper bg-red">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <h3 id="urgentComplaints">
+                    {% set urgent = complaints|selectattr('severity_score', 'ge', 8)|list|length %}
+                    {{ urgent }}
+                </h3>
+                <p class="text-muted mb-0">Urgent</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="row">
+        <div class="col-12">
+            <!-- Overview Tab -->
+            <div class="section-tab active" id="tab-overview">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-gradient text-white py-3" style="background: linear-gradient(135deg, var(--accent-gold) 0%, #B8860B 100%);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i>Recent Activity</h4>
+                            <button class="btn btn-sm btn-light" onclick="refreshActivity()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if complaints %}
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="py-3 px-4" style="border-bottom: 3px solid var(--accent-gold);">ID</th>
+                                            <th class="py-3 px-4" style="border-bottom: 3px solid var(--accent-gold);">Complaint</th>
+                                            <th class="py-3 px-4" style="border-bottom: 3px solid var(--accent-gold);">Location</th>
+                                            <th class="py-3 px-4 text-center" style="border-bottom: 3px solid var(--accent-gold);">Severity</th>
+                                            <th class="py-3 px-4 text-center" style="border-bottom: 3px solid var(--accent-gold);">Status</th>
+                                            <th class="py-3 px-4 text-end" style="border-bottom: 3px solid var(--accent-gold);">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for complaint in complaints[:5] %}
+                                        <tr class="align-middle" style="border-bottom: 1px solid #e9ecef;">
+                                            <td class="px-4 py-3">
+                                                <span class="badge bg-secondary" style="font-size: 0.85rem;">#{{ complaint.complaint_id[-4:] }}</span>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <div class="fw-bold text-dark">{{ complaint.complaint_text|truncate(50) }}</div>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-tag me-1"></i>{{ complaint.category or 'Uncategorized' }}
+                                                </small>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <div class="text-truncate" style="max-width: 200px;">
+                                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>{{ complaint.location or 'N/A' }}
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 text-center">
+                                                <span class="severity-badge {% if complaint.severity_score >= 8 %}badge-emergency{% elif complaint.severity_score >= 5 %}badge-high{% elif complaint.severity_score >= 3 %}badge-medium{% else %}badge-low{% endif %}" style="min-width: 60px; font-weight: 600;">
+                                                    {{ complaint.severity_score }}/10
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 text-center">
+                                                <span class="status-badge {% if complaint.status == 'resolved' %}status-resolved{% elif complaint.status == 'pending' %}status-pending{% elif complaint.status == 'in_progress' %}status-in-progress{% else %}status-closed{% endif %}" style="min-width: 100px; font-weight: 600;">
+                                                    <i class="fas {% if complaint.status == 'resolved' %}fa-check-circle{% elif complaint.status == 'pending' %}fa-clock{% elif complaint.status == 'in_progress' %}fa-spinner fa-spin{% else %}fa-info-circle{% endif %} me-1"></i>
+                                                    {{ complaint.status|replace('_', ' ')|upper }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 text-end">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar-alt me-1"></i>{{ complaint.created_at.strftime('%b %d, %Y') if complaint.created_at else 'N/A' }}
+                                                </small>
+                                                <br>
+                                                <small class="text-muted">{{ complaint.created_at.strftime('%I:%M %p') if complaint.created_at else '' }}</small>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {% if complaints|length > 5 %}
+                            <div class="card-footer bg-light py-3">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showSection('my-complaints')">
+                                    <i class="fas fa-list me-2"></i>View All {{ complaints|length }} Complaints
+                                </button>
+                            </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-inbox fa-4x text-muted mb-3" style="color: var(--accent-gold) !important;"></i>
+                                <h4 class="text-dark mb-2">No complaints yet</h4>
+                                <p class="text-muted mb-4">Submit your first complaint to track issues in your area</p>
+                                <button class="btn btn-primary btn-lg" onclick="showSection('submit-complaint')">
+                                    <i class="fas fa-plus-circle me-2"></i>Submit Your First Complaint
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Complaints Tab -->
+            <div class="section-tab" id="tab-my-complaints">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-clipboard-list"></i> My Complaints</span>
+                        <div>
+                            <input type="text" class="form-control form-control-sm d-inline-block w-auto" placeholder="Search..." id="searchComplaints">
+                            <select class="form-select form-select-sm d-inline-block w-auto" id="filterStatus">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if complaints %}
+                            {% for complaint in complaints %}
+                            <div class="complaint-item priority-{% if complaint.severity_score >= 8 %}emergency{% elif complaint.severity_score >= 5 %}high{% elif complaint.severity_score >= 3 %}medium{% else %}low{% endif %}" data-status="{{ complaint.status }}">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <strong class="text-gold">#{{ complaint.complaint_id }}</strong>
+                                        <span class="status-badge {% if complaint.status == 'resolved' %}status-resolved{% elif complaint.status == 'pending' %}status-pending{% elif complaint.status in ['assigned', 'in_progress'] %}status-in-progress{% else %}status-closed{% endif %} ms-2">
+                                            {{ complaint.status|upper }}
+                                        </span>
+                                        <p class="mt-2 mb-1" style="max-width: 800px; overflow-wrap: break-word;">
+                                            {{ complaint.complaint_text }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt"></i> {{ complaint.location or 'N/A' }} |
+                                            <i class="fas fa-chart-line"></i> Severity: {{ complaint.severity_score }}/10 |
+                                            <i class="fas fa-tag"></i> {{ complaint.category }} |
+                                            <i class="fas fa-calendar"></i> {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') if complaint.created_at else 'N/A' }}
+                                        </small>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <div class="mb-2">
+                                            <span class="badge bg-secondary">Priority: {{ complaint.priority_level }}</span>
+                                        </div>
+                                        {% if complaint.status == 'pending' %}
+                                        <button class="btn btn-sm btn-outline-danger" onclick="alert('Complaint is pending review')">
+                                            <i class="fas fa-exclamation-circle"></i> Follow Up
+                                        </button>
+                                        {% elif complaint.status == 'in_progress' %}
+                                        <button class="btn btn-sm btn-outline-info" onclick="alert('Officer is working on your complaint')">
+                                            <i class="fas fa-user-cog"></i> Contact Officer
+                                        </button>
+                                        {% else %}
+                                        <button class="btn btn-sm btn-outline-success" onclick="alert('Thank you for your feedback!')">
+                                            <i class="fas fa-smile"></i> Rate Service
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                                <h5>No complaints submitted yet</h5>
+                                <p class="text-muted">Start by submitting your first complaint</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Complaint Tab -->
+            <div class="section-tab" id="tab-submit-complaint">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-pen-alt"></i> Submit New Complaint
+                            </div>
+                            <div class="card-body">
+                                <form id="complaintForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" id="complaintCategory" required>
+                                            <option value="">Select category...</option>
+                                            <option value="Infrastructure">Infrastructure</option>
+                                            <option value="Utilities">Utilities</option>
+                                            <option value="Sanitation">Sanitation</option>
+                                            <option value="Traffic">Traffic</option>
+                                            <option value="Public Safety">Public Safety</option>
+                                            <option value="Noise">Noise Complaint</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Complaint Description <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="complaintText" rows="6" 
+                                            placeholder="Please provide a detailed description of your complaint including what happened, when it occurred, specific location details, and any supporting information..."
+                                            required maxlength="50000"></textarea>
+                                        <div class="form-text d-flex justify-content-between mt-2">
+                                            <ul class="mb-0">
+                                                <li>What happened?</li>
+                                                <li>When did it occur?</li>
+                                                <li>Specific location details</li>
+                                                <li>Any supporting information</li>
+                                            </ul>
+                                            <span id="charCount" class="text-muted">0 / 50,000 characters</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Location <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="location" 
+                                            placeholder="Enter specific location (e.g., 123 Main St, Downtown Park, etc.)" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact Information (Optional)</label>
+                                        <input type="tel" class="form-control" id="contact" 
+                                            placeholder="Phone number for updates">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Upload Evidence (Optional)</label>
+                                        <input type="file" class="form-control" id="evidence" accept="image/*" multiple>
+                                        <div class="form-text">You can upload photos related to your complaint</div>
+                                    </div>
+                                    <div id="predictionResult" class="mt-3" style="display: none;"></div>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-microphone-alt"></i> Analyze & Submit Complaint
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="section-tab" id="tab-analytics">
+                {% include 'partials/citizen_analytics.html' %}
+            </div>
+
+            <!-- Map View Tab -->
+            <div class="section-tab" id="tab-map-view">
+                {% include 'partials/map_view_section.html' %}
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="section-tab" id="tab-reports">
+                {% include 'partials/citizen_reports.html' %}
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="section-tab" id="tab-settings">
+                {% include 'partials/citizen_settings.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Section Navigation
+document.querySelectorAll('.dashboard-nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        showSection(section);
+    });
+});
+
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active from nav items
+    document.querySelectorAll('.dashboard-nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetTab = document.getElementById(`tab-${sectionName}`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    
+    // Set nav item as active
+    const activeNav = document.querySelector(`[data-section="${sectionName}"]`);
+    if (activeNav) {
+        activeNav.classList.add('active');
+    }
+}
+
+// Complaint submission with better error handling
+document.getElementById('complaintForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const complaintText = document.getElementById('complaintText').value;
+    const location = document.getElementById('location').value;
+    const category = document.getElementById('complaintCategory').value;
+    const contact = document.getElementById('contact').value;
+    
+    // Client-side validation
+    if (!complaintText.trim() || complaintText.trim().length < 10) {
+        showErrorAlert('Complaint description must be at least 10 characters long');
+        return;
+    }
+    
+    if (complaintText.length > 50000) {
+        showErrorAlert('Complaint description is too long. Please limit it to 50,000 characters.');
+        return;
+    }
+    
+    if (!location.trim()) {
+        showErrorAlert('Location is required');
+        return;
+    }
+    
+    if (!category) {
+        showErrorAlert('Please select a category');
+        return;
+    }
+    
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing & Submitting...';
+    btn.disabled = true;
+    
+    fetch('/submit-complaint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            complaint_text: complaintText,
+            location: location,
+            category: category,
+            contact: contact
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.error || 'Submission failed'); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            const resultDiv = document.getElementById('predictionResult');
+            resultDiv.innerHTML = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <h5><i class="fas fa-check-circle"></i> Complaint Submitted Successfully!</h5>
+                    <p class="mb-2"><strong>Complaint ID:</strong> #${data.complaint_id}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Severity Score:</strong> 
+                                <span class="badge ${data.prediction.severity_score >= 8 ? 'bg-danger' : data.prediction.severity_score >= 5 ? 'bg-warning' : 'bg-info'}">
+                                    ${data.prediction.severity_score}/10
+                                </span>
+                            </p>
+                            <p class="mb-1"><strong>Category:</strong> ${data.prediction.category}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Priority Level:</strong> ${getPriorityBadge(data.prediction.priority_level)}</p>
+                            <p class="mb-1"><strong>Expected Response Time:</strong> ${data.prediction.response_time}</p>
+                        </div>
+                    </div>
+                    <p class="mb-0 text-muted"><small>We'll notify you when an officer is assigned to your complaint.</small></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            
+            // Reset form
+            document.getElementById('complaintForm').reset();
+            document.getElementById('charCount').textContent = '0 / 50,000 characters';
+            
+            // Redirect to my complaints after 3 seconds
+            setTimeout(() => {
+                showSection('my-complaints');
+            }, 3000);
+        } else {
+            showErrorAlert(data.error || 'Failed to submit complaint');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert(`Submission failed: ${error.message}. Please try again.`);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+});
+
+function showErrorAlert(message) {
+    const resultDiv = document.getElementById('predictionResult');
+    resultDiv.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    resultDiv.style.display = 'block';
+}
+
+function getPriorityBadge(level) {
+    const badges = {
+        1: '<span class="badge bg-danger">Emergency</span>',
+        2: '<span class="badge bg-warning">High Priority</span>',
+        3: '<span class="badge bg-info">Medium Priority</span>',
+        4: '<span class="badge bg-secondary">Low Priority</span>'
+    };
+    return badges[level] || `Level ${level}`;
+}
+
+// Character counter for complaint text
+document.getElementById('complaintText')?.addEventListener('input', function() {
+    const count = this.value.length;
+    const counter = document.getElementById('charCount');
+    if (counter) {
+        counter.textContent = `${count.toLocaleString()} / 50,000 characters`;
+        
+        // Change color when approaching limit
+        if (count > 45000) {
+            counter.className = 'text-danger fw-bold';
+        } else if (count > 40000) {
+            counter.className = 'text-warning fw-bold';
+        } else {
+            counter.className = 'text-muted';
+        }
+    }
+});
+
+// Filter functionality
+document.getElementById('filterStatus')?.addEventListener('change', function() {
+    const status = this.value;
+    document.querySelectorAll('#tab-my-complaints .complaint-item').forEach(item => {
+        const itemStatus = item.dataset.status;
+        if (status === 'all' || itemStatus === status) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// Search functionality
+document.getElementById('searchComplaints')?.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    document.querySelectorAll('#tab-my-complaints .complaint-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+# Python virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# Caches and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# IDE/VS Code configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Flask/App uploads and database caches
+smart-complaint-system/static/uploads/*
+!smart-complaint-system/static/uploads/.gitkeep

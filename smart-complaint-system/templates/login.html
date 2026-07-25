@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PriorityPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gov: #0B2540;
+            --secondary-gov: #005A9C;
+            --accent-gold: #B45309;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: var(--text-dark);
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 90, 156, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            margin: 20px;
+        }
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .login-card:hover { transform: translateY(-2px); }
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo i { font-size: 2.5rem; color: var(--secondary-gov); margin-bottom: 10px; }
+        .logo h2 { color: var(--primary-gov); font-weight: 800; font-size: 1.8rem; }
+        .logo span { color: var(--accent-gold); }
+        .logo p { color: var(--text-gray); font-size: 0.9rem; margin-top: 5px; font-weight: 500; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { color: var(--text-dark); font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.9rem; }
+        .input-group {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .input-group:focus-within {
+            border-color: var(--secondary-gov);
+            box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.15);
+            background: #FFFFFF;
+        }
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--secondary-gov);
+            padding: 12px 15px;
+        }
+        .form-control {
+            background: transparent;
+            border: none;
+            color: var(--text-dark);
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        .form-control:focus {
+            background: transparent;
+            box-shadow: none;
+            color: var(--text-dark);
+            outline: none;
+        }
+        .form-control::placeholder { color: #94A3B8; }
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox-label { color: var(--text-gray); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; }
+        .checkbox-label input { accent-color: var(--secondary-gov); }
+        .forgot-link { color: var(--secondary-gov); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .forgot-link:hover { color: #004B82; }
+        .btn-login {
+            width: 100%;
+            background: var(--secondary-gov);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-login:hover {
+            background: #004B82;
+            transform: translateY(-1px);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        .register-link p { color: var(--text-gray); margin-bottom: 0; font-size: 0.9rem; }
+        .register-link a { color: var(--secondary-gov); text-decoration: none; font-weight: 600; }
+        .register-link a:hover { color: #004B82; }
+        .alert { border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #F8FAFC;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-gold);
+        }
+        .demo-credentials p { color: var(--text-gray); font-size: 0.85rem; margin-bottom: 5px; }
+        .demo-credentials strong { color: var(--accent-gold); }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-card { animation: fadeInUp 0.6s ease-out; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h2>Priority<span>Pulse</span></h2>
+                <p>Smart Complaint Management System</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope me-2"></i>Email or Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email or username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye-slash toggle-password" data-target="password"></i>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember"> Remember me
+                    </label>
+                    <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-login" aria-label="Login to your account">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+            </form>
+
+            <div class="demo-credentials">
+                <p><i class="fas fa-info-circle me-2"></i><strong>Demo Credentials:</strong></p>
+                <p>👑 Admin: admin@prioritypulse.com / admin123</p>
+                <p>👮 Officer: john.doe@city.gov / officer123</p>
+                <p>👤 Citizen: jane.smith@email.com / citizen123</p>
+            </div>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Create an account</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                if (input) {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
